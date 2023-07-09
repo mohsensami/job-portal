@@ -1,69 +1,85 @@
-import "./App.css";
-import Navbar from "./components/layout/Navbar";
-import { Input, Grid, Icon, Container, Form, Image, Card, Header, Button, Loader, Dimmer } from "semantic-ui-react";
-
-import "semantic-ui-css/semantic.min.css";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { useGetUsersQuery } from './services/users';
+import { FaEnvelopeOpen, FaUser, FaCalendarTimes, FaMap, FaPhone, FaLock } from 'react-icons/fa';
+import './App.css';
 
 function App() {
-    const [username, setUsername] = useState([]);
-    const [value, setValue] = useState("");
-    const [isloading, setIsloading] = useState(false);
-    const submitHandler = (e) => {
-        setIsloading(true);
+    const [person, setPerson] = useState(null);
+    const [value, setValue] = useState('Random Person');
+    const [title, setTitle] = useState('name');
 
-        fetch(`https://api.github.com/search/users?q=${value}`)
-            .then((res) => res.json())
-            .then((data) => setUsername([...data.items]));
-        setIsloading(false);
+    const { data, isLoading, refetch } = useGetUsersQuery();
+    const defaultImage = 'https://randomuser.me/api/portraits/men/75.jpg';
+
+    useEffect(() => {
+        if (data) {
+            const randomPerson = data.results[0];
+            const { phone, email } = randomPerson;
+            const { large: image } = randomPerson.picture;
+            const { password } = randomPerson.login;
+            const { first, last } = randomPerson.name;
+            const {
+                dob: { age },
+            } = randomPerson;
+            const {
+                street: { number, name },
+            } = randomPerson.location;
+            const newPerson = {
+                image,
+                phone,
+                email,
+                password,
+                age,
+                street: `${number} ${name}`,
+                name: `${first} ${last}`,
+            };
+            setPerson(newPerson);
+            setTitle('name');
+            setValue(newPerson.name);
+        }
+    }, [data]);
+
+    const handleValue = (e) => {
+        if (e.target.classList.contains('icon')) {
+            const newValue = e.target.dataset.label;
+            setTitle(newValue);
+            setValue(person[newValue]);
+        }
     };
-
     return (
-        <>
-            <Container text>
-                <Navbar />
-                <br />
-                <br />
-                <Header as="h2">Github Finder</Header>
-
-                <Form onSubmit={(e) => submitHandler(e)} className="">
-                    <Form.Field>
-                        <Input onChange={(e) => setValue(e.target.value)} label="@" placeholder="Github Username" />
-                    </Form.Field>
-                    <Form.Button content="Submit" />
-                </Form>
-                <br />
-
-                {isloading ? (
-                    <Loader active inline="centered" />
-                ) : (
-                    <Grid>
-                        <Grid.Row columns={2}>
-                            {username
-                                ? username.map((item) => {
-                                      return (
-                                          <Grid.Column key={item.id}>
-                                              <Card>
-                                                  <Image src={item.avatar_url} wrapped ui={false} />
-                                                  <Card.Content>
-                                                      <Card.Header>{item.login}</Card.Header>
-                                                  </Card.Content>
-                                                  <Card.Content extra>
-                                                      <a>
-                                                          <Button href={item.html_url} content="Show" secondary />
-                                                      </a>
-                                                  </Card.Content>
-                                              </Card>
-                                              <br />
-                                          </Grid.Column>
-                                      );
-                                  })
-                                : null}
-                        </Grid.Row>
-                    </Grid>
-                )}
-            </Container>
-        </>
+        <main>
+            <div className="block bcg-black"></div>
+            <div className="block">
+                <div className="container">
+                    <img src={(person && person.image) || defaultImage} alt="random_user" className="user-img" />
+                    <p className="user-title">My {title}</p>
+                    <p className="user-value">{value}</p>
+                    <div className="values-list">
+                        <button data-label="name" onMouseOver={handleValue} className="icon">
+                            <FaUser />
+                        </button>
+                        <button data-label="email" onMouseOver={handleValue} className="icon">
+                            <FaEnvelopeOpen />
+                        </button>
+                        <button data-label="age" onMouseOver={handleValue} className="icon">
+                            <FaCalendarTimes />
+                        </button>
+                        <button data-label="street" onMouseOver={handleValue} className="icon">
+                            <FaMap />
+                        </button>
+                        <button data-label="phone" onMouseOver={handleValue} className="icon">
+                            <FaPhone />
+                        </button>
+                        <button data-label="password" onMouseOver={handleValue} className="icon">
+                            <FaLock />
+                        </button>
+                    </div>
+                    <button className="btn" type="button" onClick={() => refetch()}>
+                        {isLoading ? 'loading...' : 'random user'}
+                    </button>
+                </div>
+            </div>
+        </main>
     );
 }
 
