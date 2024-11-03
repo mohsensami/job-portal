@@ -5,8 +5,11 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 var cors = require('cors');
-const cookieParser = require("cookie-parser");
-const errorHandler = require("./middleware/error");
+const cookieParser = require('cookie-parser');
+const errorHandler = require('./middleware/error');
+
+// import routes
+const authRoutes = require('./routes/authRoutes');
 
 //database connection
 mongoose
@@ -30,6 +33,12 @@ app.use(
 );
 app.use(cookieParser());
 app.use(cors());
+
+//ROUTES MIDDLEWARE
+// app.get('/', (req, res) => {
+//     res.send('Hello from Node Js');
+// });
+app.use('/api', authRoutes);
 
 // error middleware
 app.use(errorHandler);
