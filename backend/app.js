@@ -10,6 +10,8 @@ const errorHandler = require('./middleware/error');
 
 // import routes
 const authRoutes = require('./routes/authRoutes');
+// import routes
+const userRoutes = require('./routes/userRoutes');
 
 //database connection
 mongoose
@@ -39,6 +41,7 @@ app.use(cors());
 //     res.send('Hello from Node Js');
 // });
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 // error middleware
 app.use(errorHandler);
