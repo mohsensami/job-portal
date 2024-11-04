@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { allUsers, singleUser } = require('../controllers/userController');
+const { allUsers, singleUser, editUser } = require('../controllers/userController');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 //user routes
@@ -9,5 +9,7 @@ const { isAuthenticated, isAdmin } = require('../middleware/auth');
 router.get('/allusers', isAuthenticated, isAdmin, allUsers);
 // /api/user/id
 router.get('/user/:id', isAuthenticated, singleUser);
+// /api/user/edit/id
+router.put('/user/edit/:id', isAuthenticated, editUser);
 
 module.exports = router;
