@@ -3,6 +3,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import { theme } from './theme';
+import './App.css';
 
 function App() {
     return (
