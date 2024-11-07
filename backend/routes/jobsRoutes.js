@@ -7,5 +7,7 @@ const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 // /api/job/create
 router.post('/job/create', isAuthenticated, isAdmin, createJob);
+// /api/job/id
+router.get('/job/:id', singleJob);
 
 module.exports = router;
