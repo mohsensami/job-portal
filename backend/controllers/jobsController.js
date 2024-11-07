@@ -35,3 +35,18 @@ exports.singleJob = async (req, res, next) => {
     }
 };
 
+//update job by id.
+exports.updateJob = async (req, res, next) => {
+    try {
+        const job = await Job.findByIdAndUpdate(req.params.job_id, req.body, { new: true })
+            .populate('jobType', 'jobTypeName')
+            .populate('user', 'firstName lastName');
+        res.status(200).json({
+            success: true,
+            job,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+

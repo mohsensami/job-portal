@@ -9,5 +9,7 @@ const { isAuthenticated, isAdmin } = require('../middleware/auth');
 router.post('/job/create', isAuthenticated, isAdmin, createJob);
 // /api/job/id
 router.get('/job/:id', singleJob);
+// /api/job/update/job_id
+router.put('/job/update/:job_id', isAuthenticated, isAdmin, updateJob);
 
 module.exports = router;
