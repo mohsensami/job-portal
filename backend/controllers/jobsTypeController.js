@@ -30,3 +30,15 @@ exports.allJobsType = async (req, res, next) => {
     }
 };
 
+//update job type
+exports.updateJobType = async (req, res, next) => {
+    try {
+        const jobT = await JobType.findByIdAndUpdate(req.params.type_id, req.body, { new: true });
+        res.status(200).json({
+            success: true,
+            jobT,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
