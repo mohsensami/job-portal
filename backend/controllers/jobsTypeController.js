@@ -29,3 +29,4 @@ exports.allJobsType = async (req, res, next) => {
         next(error);
     }
 };
+
