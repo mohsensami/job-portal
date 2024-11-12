@@ -7,7 +7,7 @@ export const jobLoadAction =
         dispatch({ type: JOB_LOAD_REQUEST });
         try {
             const { data } = await axios.get(
-                `/api/jobs/show/?pageNumber=${pageNumber}&keyword=${keyword}&cat=${cat}&location=${location}`
+                `http://localhost:8000/api/jobs/show/?pageNumber=${pageNumber}&keyword=${keyword}&cat=${cat}&location=${location}`
             );
             dispatch({
                 type: JOB_LOAD_SUCCESS,
