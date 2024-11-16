@@ -11,6 +11,7 @@ import {
     USER_SIGNIN_REQUEST,
     USER_SIGNIN_SUCCESS,
 } from '../constants/userConstant';
+import axiosInstance from '../../service/api';
 
 export const userSignInAction = (user) => async (dispatch) => {
     dispatch({ type: USER_SIGNIN_REQUEST });
@@ -56,6 +57,7 @@ export const userProfileAction = () => async (dispatch) => {
     dispatch({ type: USER_LOAD_REQUEST });
     try {
         const { data } = await axios.get('http://localhost:8000/api/me');
+        console.log(data);
         dispatch({
             type: USER_LOAD_SUCCESS,
             payload: data,

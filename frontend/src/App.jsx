@@ -11,9 +11,13 @@ import LogIn from './pages/LogIn';
 import UserDashboard from './pages/user/UserDashboard';
 import UserRoute from './component/UserRoute';
 import Layout from './pages/global/Layout';
+import UserJobsHistory from './pages/user/UserJobsHistory';
+import UserInfoDashboard from './pages/user/UserInfoDashboard';
 
 //HOC
 const UserDashboardHOC = Layout(UserDashboard);
+const UserJobsHistoryHOC = Layout(UserJobsHistory);
+const UserInfoDashboardHOC = Layout(UserInfoDashboard);
 
 function App() {
     return (
@@ -33,6 +37,22 @@ function App() {
                                 element={
                                     <UserRoute>
                                         <UserDashboardHOC />
+                                    </UserRoute>
+                                }
+                            />
+                            <Route
+                                path="/user/jobs"
+                                element={
+                                    <UserRoute>
+                                        <UserJobsHistoryHOC />
+                                    </UserRoute>
+                                }
+                            />
+                            <Route
+                                path="/user/info"
+                                element={
+                                    <UserRoute>
+                                        <UserInfoDashboardHOC />
                                     </UserRoute>
                                 }
                             />

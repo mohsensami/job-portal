@@ -1,3 +1,4 @@
+
 class ErrorResponse extends Error {
     constructor(message, codeStatus) {
         super(message);

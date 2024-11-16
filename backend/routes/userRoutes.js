@@ -3,6 +3,7 @@ const router = express.Router();
 const { allUsers, singleUser, editUser, deleteUser, createUserJobsHistory } = require('../controllers/userController');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
+
 //user routes
 
 // /api/allusers
@@ -15,5 +16,8 @@ router.put('/user/edit/:id', isAuthenticated, editUser);
 router.delete('/admin/user/delete/:id', isAuthenticated, isAdmin, deleteUser);
 // /api/user/jobhistory
 router.post('/user/jobhistory', isAuthenticated, createUserJobsHistory);
+
+
+
 
 module.exports = router;

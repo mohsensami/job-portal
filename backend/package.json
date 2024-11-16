@@ -1,23 +1,23 @@
 {
-    "name": "backend",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "start": "nodemon app.js"
-    },
-    "author": "Mohsen Sami",
-    "license": "ISC",
-    "description": "Job Portal",
-    "dependencies": {
-        "bcryptjs": "^2.4.3",
-        "body-parser": "^1.20.3",
-        "cookie-parser": "^1.4.7",
-        "cors": "^2.8.5",
-        "dotenv": "^16.4.5",
-        "express": "^4.21.1",
-        "jsonwebtoken": "^9.0.2",
-        "mongoose": "^5.13.9",
-        "morgan": "^1.10.0",
-        "nodemon": "^3.1.7"
-    }
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "job portal",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "Emmann",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^5.13.9",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  }
 }
