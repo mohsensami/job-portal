@@ -15,6 +15,7 @@ import UserJobsHistory from './pages/user/UserJobsHistory';
 import UserInfoDashboard from './pages/user/UserInfoDashboard';
 import AdminRoute from './component/AdminRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import SingleJob from './pages/SingleJob';
 
 //HOC
 const UserDashboardHOC = Layout(UserDashboard);
@@ -35,6 +36,7 @@ function App() {
                             <Route path="/search/location/:location" element={<Home />} />
                             <Route path="/search/:keyword" element={<Home />} />
                             <Route path="/login" element={<LogIn />} />
+                            <Route path="/job/:id" element={<SingleJob />} />
                             <Route
                                 path="/user/dashboard"
                                 element={
@@ -59,6 +61,7 @@ function App() {
                                     </UserRoute>
                                 }
                             />
+
                             <Route
                                 path="/admin/dashboard"
                                 element={
