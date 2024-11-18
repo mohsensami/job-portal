@@ -14,7 +14,6 @@ const UserJobsHistory = () => {
 
     return (
         <>
-        {JSON.stringify(user)}
             <Box>
                 <Typography variant="h4" sx={{ color: '#fafafa' }}>
                     {' '}
