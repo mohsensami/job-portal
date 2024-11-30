@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import headerImage from '../images/jobbg.jpg';
+import headerImage from '../images/hero.jpg';
 import SearchInputEl from './SearchInputEl';
 
 const Header = () => {
