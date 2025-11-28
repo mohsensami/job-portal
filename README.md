@@ -1,4 +1,4 @@
-# job-portal-mern-stack
+# Job Portal MERN Stack
 
 This is a Full stack job App made with MERN Stack, MUI, Datagrid, cookie, etc. It is a Youtube series to teach step by step how to make a full stack App
 
