@@ -1,10 +1,7 @@
 import axios from "axios";
 
 const apiURL =
-  import.meta.env.VITE_BASE_URL ||
-  "http://localhost:8000" ||
-  "https://job-portal-backend.vercel.app";
-
+  import.meta.env.VITE_BASE_URL || "https://job-portal-j3fi.onrender.com";
 const axiosInstance = axios.create({
   baseURL: apiURL,
   // timeout: 5000, // Optional timeout value in milliseconds
