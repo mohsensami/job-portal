@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const apiURL =
+const baseURL =
   import.meta.env.VITE_BASE_URL || "https://job-portal-j3fi.onrender.com";
 const axiosInstance = axios.create({
-  baseURL: "https://job-portal-j3fi.onrender.com",
+  baseURL,
   // timeout: 5000, // Optional timeout value in milliseconds
   headers: {
     "Content-Type": "application/json",
@@ -12,14 +12,18 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log(token);
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    const userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      const parsedUserInfo = JSON.parse(userInfo);
+      const token = parsedUserInfo?.token;
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
     return config;
   },
   (error) => {
-    Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 

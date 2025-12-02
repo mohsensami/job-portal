@@ -21,9 +21,11 @@ export const jobLoadAction =
         payload: data,
       });
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.error || error.message || "An error occurred";
       dispatch({
         type: JOB_LOAD_FAIL,
-        payload: error.response.data.error,
+        payload: errorMessage,
       });
     }
   };
@@ -32,15 +34,17 @@ export const jobLoadAction =
 export const jobLoadSingleAction = (id) => async (dispatch) => {
   dispatch({ type: JOB_LOAD_SINGLE_REQUEST });
   try {
-    const { data } = await axios.get(`/api/job/${id}`);
+    const { data } = await axiosInstance.get(`/api/job/${id}`);
     dispatch({
       type: JOB_LOAD_SINGLE_SUCCESS,
       payload: data,
     });
   } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: JOB_LOAD_SINGLE_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
   }
 };

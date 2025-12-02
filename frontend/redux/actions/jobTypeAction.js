@@ -14,9 +14,10 @@ export const jobTypeLoadAction = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
+    const errorMessage = error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: JOB_TYPE_LOAD_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
   }
 };

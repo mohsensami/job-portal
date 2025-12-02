@@ -29,11 +29,13 @@ export const userSignInAction = (user) => async (dispatch) => {
     });
     toast.success("Login Successfully!");
   } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: USER_SIGNIN_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
-    toast.error(error.response.data.error);
+    toast.error(errorMessage);
   }
 };
 
@@ -41,7 +43,7 @@ export const userSignInAction = (user) => async (dispatch) => {
 export const userLogoutAction = () => async (dispatch) => {
   dispatch({ type: USER_LOGOUT_REQUEST });
   try {
-    const { data } = await axios.get("/api/logout");
+    const { data } = await axiosInstance.get("/api/logout");
     localStorage.removeItem("userInfo");
     dispatch({
       type: USER_LOGOUT_SUCCESS,
@@ -49,11 +51,13 @@ export const userLogoutAction = () => async (dispatch) => {
     });
     toast.success("Log out successfully!");
   } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: USER_LOGOUT_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
-    toast.error(error.response.data.error);
+    toast.error(errorMessage);
   }
 };
 
@@ -61,15 +65,17 @@ export const userLogoutAction = () => async (dispatch) => {
 export const userProfileAction = () => async (dispatch) => {
   dispatch({ type: USER_LOAD_REQUEST });
   try {
-    const { data } = await axios.get("/api/me");
+    const { data } = await axiosInstance.get("/api/me");
     dispatch({
       type: USER_LOAD_SUCCESS,
       payload: data,
     });
   } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: USER_LOAD_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
   }
 };
@@ -78,15 +84,17 @@ export const userProfileAction = () => async (dispatch) => {
 export const allUserAction = () => async (dispatch) => {
   dispatch({ type: ALL_USER_LOAD_REQUEST });
   try {
-    const { data } = await axios.get("/api/allusers");
+    const { data } = await axiosInstance.get("/api/allusers");
     dispatch({
       type: ALL_USER_LOAD_SUCCESS,
       payload: data,
     });
   } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: ALL_USER_LOAD_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
   }
 };
@@ -95,7 +103,7 @@ export const allUserAction = () => async (dispatch) => {
 export const userApplyJobAction = (job) => async (dispatch) => {
   dispatch({ type: USER_APPLY_JOB_REQUEST });
   try {
-    const { data } = await axios.post("/api/user/jobhistory", job);
+    const { data } = await axiosInstance.post("/api/user/jobhistory", job);
 
     dispatch({
       type: USER_APPLY_JOB_SUCCESS,
@@ -103,10 +111,12 @@ export const userApplyJobAction = (job) => async (dispatch) => {
     });
     toast.success("Apply Successfully for this Job!");
   } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || error.message || "An error occurred";
     dispatch({
       type: USER_APPLY_JOB_FAIL,
-      payload: error.response.data.error,
+      payload: errorMessage,
     });
-    toast.error(error.response.data.error);
+    toast.error(errorMessage);
   }
 };
