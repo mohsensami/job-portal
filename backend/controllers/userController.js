@@ -64,7 +64,7 @@ exports.deleteUser = async (req, res, next) => {
         const user = await User.findByIdAndRemove(req.params.id);
         res.status(200).json({
             success: true,
-            message: "user deleted"
+            message: "کاربر حذف شد"
         })
         next();
 
@@ -81,7 +81,7 @@ exports.createUserJobsHistory = async (req, res, next) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         if (!currentUser) {
-            return next(new ErrorResponse("You must log In", 401));
+            return next(new ErrorResponse("باید وارد شوید", 401));
         } else {
             const addJobHistory = {
                 title,

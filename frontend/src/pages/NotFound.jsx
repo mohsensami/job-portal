@@ -7,7 +7,7 @@ const NotFound = () => {
         <>
             <Navbar />
             <Box sx={{ height: '81vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <h1>Page not found!</h1>
+                <h1>صفحه یافت نشد!</h1>
             </Box>
             <Footer />
         </>

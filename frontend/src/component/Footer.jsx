@@ -15,7 +15,7 @@ const Footer = () => {
                 }}
             >
                 <Box component="span" sx={{ color: palette.primary.main }}>
-                    All rights reserved! 2023.
+                    تمام حقوق محفوظ است! ۱۴۰۳.
                 </Box>
             </Box>
         </>

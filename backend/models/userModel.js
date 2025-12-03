@@ -49,30 +49,30 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         trim: true,
-        required: [true, 'first name is required'],
+        required: [true, 'نام الزامی است'],
         maxlength: 32,
     },
     lastName: {
         type: String,
         trim: true,
-        required: [true, 'last name is required'],
+        required: [true, 'نام خانوادگی الزامی است'],
         maxlength: 32,
     },
     email: {
         type: String,
         trim: true,
-        required: [true, 'e-mail is required'],
+        required: [true, 'ایمیل الزامی است'],
         unique: true,
         match: [
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            'Please add a valid email'
+            'لطفاً یک ایمیل معتبر وارد کنید'
         ]
     },
     password: {
         type: String,
         trim: true,
-        required: [true, 'password is required'],
-        minlength: [6, 'password must have at least (6) caracters'],
+        required: [true, 'رمز عبور الزامی است'],
+        minlength: [6, 'رمز عبور باید حداقل ۶ کاراکتر داشته باشد'],
     },
 
     jobsHistory: [jobsHistorySchema],

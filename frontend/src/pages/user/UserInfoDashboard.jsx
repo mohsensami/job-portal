@@ -14,20 +14,20 @@ const UserInfoDashboard = () => {
                 <Card sx={{ minWidth: 275, bgcolor: palette.secondary.midNightBlue }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 16 }} color="#fafafa" gutterBottom>
-                            Personal Info
+                            اطلاعات شخصی
                         </Typography>
                         <hr style={{ marginBottom: '30px' }} />
                         <Typography variant="h6" component="div" sx={{ color: '#fafafa' }}>
-                            First name: {user && user.firstName}
+                            نام: {user && user.firstName}
                         </Typography>
                         <Typography variant="h6" component="div" sx={{ color: '#fafafa' }}>
-                            Last name: {user && user.lastName}
+                            نام خانوادگی: {user && user.lastName}
                         </Typography>
                         <Typography variant="h6" component="div" sx={{ color: '#fafafa' }}>
-                            E-mail: {user && user.email}
+                            ایمیل: {user && user.email}
                         </Typography>
                         <Typography sx={{ mb: 1.5, color: 'grey', pt: 2 }} color="text.secondary">
-                            Status: {user && user.role === 0 ? 'Regular user' : 'Admin'}
+                            وضعیت: {user && user.role === 0 ? 'کاربر عادی' : 'مدیر'}
                         </Typography>
                     </CardContent>
                 </Card>

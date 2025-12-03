@@ -8,7 +8,7 @@ const jobTypeSchema = new mongoose.Schema({
     jobTypeName: {
         type: String,
         trim: true,
-        required: [true, 'job category is required'],
+        required: [true, 'دسته‌بندی شغل الزامی است'],
         maxlength: 70,
     },
 

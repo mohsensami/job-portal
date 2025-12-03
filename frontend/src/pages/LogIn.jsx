@@ -12,11 +12,11 @@ import { userSignInAction } from '../../redux/actions/userAction';
 import { useNavigate } from 'react-router-dom';
 
 const validationSchema = yup.object({
-    email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
+    email: yup.string('ایمیل خود را وارد کنید').email('یک ایمیل معتبر وارد کنید').required('ایمیل الزامی است'),
     password: yup
-        .string('Enter your password')
-        .min(6, 'Password should be of minimum 6 characters length')
-        .required('Password is required'),
+        .string('رمز عبور خود را وارد کنید')
+        .min(6, 'رمز عبور باید حداقل ۶ کاراکتر باشد')
+        .required('رمز عبور الزامی است'),
 });
 
 const LogIn = () => {
@@ -63,12 +63,12 @@ const LogIn = () => {
                             sx={{ mb: 3 }}
                             fullWidth
                             id="email"
-                            label="E-mail"
+                            label="ایمیل"
                             name="email"
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            placeholder="E-mail"
+                            placeholder="ایمیل"
                             value={formik.values.email}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -80,12 +80,12 @@ const LogIn = () => {
                             fullWidth
                             id="password"
                             name="password"
-                            label="Password"
+                            label="رمز عبور"
                             type="password"
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            placeholder="Password"
+                            placeholder="رمز عبور"
                             value={formik.values.password}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -94,7 +94,7 @@ const LogIn = () => {
                         />
 
                         <Button fullWidth variant="contained" type="submit">
-                            Log In
+                            ورود
                         </Button>
                     </Box>
                 </Box>

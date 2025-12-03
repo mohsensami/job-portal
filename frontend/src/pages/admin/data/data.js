@@ -1,5 +1,5 @@
 export const data = [
-    ['Year', 'Jobs', 'Pending', 'Approved'],
+    ['سال', 'شغل‌ها', 'در انتظار', 'تایید شده'],
     ['2014', 1000, 400, 200],
     ['2015', 1170, 460, 250],
     ['2016', 660, 1120, 300],
@@ -8,7 +8,7 @@ export const data = [
 
 export const options = {
     chart: {
-        title: 'HR Performance',
+        title: 'عملکرد منابع انسانی',
         // subtitle: "Sales, Expenses, and Profit: 2014-2017",
     },
 };

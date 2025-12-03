@@ -38,7 +38,7 @@ const SidebarAdm = () => {
                     <Box>
                         <Box sx={{ pt: 3, pb: 5, display: 'flex', justifyContent: 'center' }}>
                             {collapsed ? (
-                                <Avatar alt="logo dashboard" src={logoDashboard} />
+                                <Avatar alt="لوگوی داشبورد" src={logoDashboard} />
                             ) : (
                                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <img
@@ -49,7 +49,7 @@ const SidebarAdm = () => {
                                             transition: 'all ease-out .5s',
                                         }}
                                         src={logoDashboard}
-                                        alt="logo dashboard"
+                                        alt="لوگوی داشبورد"
                                     />
                                 </Box>
                             )}
@@ -82,34 +82,34 @@ const SidebarAdm = () => {
                                 <>
                                     <MenuItem component={<Link to="/admin/dashboard" />} icon={<DashboardIcon />}>
                                         {' '}
-                                        Dashboard{' '}
+                                        داشبورد{' '}
                                     </MenuItem>
                                     <MenuItem component={<Link to="/admin/users" />} icon={<GroupAddIcon />}>
                                         {' '}
-                                        Users{' '}
+                                        کاربران{' '}
                                     </MenuItem>
                                     <MenuItem component={<Link to="/admin/jobs" />} icon={<WorkIcon />}>
                                         {' '}
-                                        Jobs{' '}
+                                        شغل‌ها{' '}
                                     </MenuItem>
                                     <MenuItem component={<Link to="/admin/category" />} icon={<CategoryIcon />}>
                                         {' '}
-                                        Category{' '}
+                                        دسته‌بندی{' '}
                                     </MenuItem>
                                 </>
                             ) : (
                                 <>
                                     <MenuItem component={<Link to="/user/dashboard" />} icon={<DashboardIcon />}>
                                         {' '}
-                                        Dashboard{' '}
+                                        داشبورد{' '}
                                     </MenuItem>
                                     <MenuItem component={<Link to="/user/jobs" />} icon={<WorkHistoryIcon />}>
                                         {' '}
-                                        Applied Jobs{' '}
+                                        شغل‌های درخواست شده{' '}
                                     </MenuItem>
                                     <MenuItem component={<Link to="/user/info" />} icon={<Person3Icon />}>
                                         {' '}
-                                        Personal Info{' '}
+                                        اطلاعات شخصی{' '}
                                     </MenuItem>
                                 </>
                             )}
@@ -139,7 +139,7 @@ const SidebarAdm = () => {
                         >
                             <MenuItem onClick={logOut} icon={<LoginIcon />}>
                                 {' '}
-                                Log out{' '}
+                                خروج{' '}
                             </MenuItem>
                         </Menu>
                     </Box>

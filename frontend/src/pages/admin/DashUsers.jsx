@@ -25,28 +25,28 @@ const DashUsers = () => {
   const columns = [
     {
       field: "_id",
-      headerName: "User ID",
+      headerName: "شناسه کاربر",
       width: 150,
       editable: true,
     },
 
     {
       field: "email",
-      headerName: "E_mail",
+      headerName: "ایمیل",
       width: 150,
     },
 
     {
       field: "role",
-      headerName: "User status",
+      headerName: "وضعیت کاربر",
       width: 150,
       renderCell: (params) =>
-        params.row.role === 1 ? "Admin" : "Regular user",
+        params.row.role === 1 ? "مدیر" : "کاربر عادی",
     },
 
     {
       field: "createdAt",
-      headerName: "Creation date",
+      headerName: "تاریخ ایجاد",
       width: 150,
       renderCell: (params) =>
         moment(params.row.createdAt).format("YYYY-MM-DD HH:MM:SS"),
@@ -68,7 +68,7 @@ const DashUsers = () => {
               style={{ color: "white", textDecoration: "none" }}
               to={`/admin/edit/user/${values.row._id}`}
             >
-              Edit
+              ویرایش
             </Link>
           </Button>
           <Button
@@ -76,7 +76,7 @@ const DashUsers = () => {
             variant="contained"
             color="error"
           >
-            Delete
+            حذف
           </Button>
         </Box>
       ),
@@ -87,12 +87,12 @@ const DashUsers = () => {
     <>
       <Box>
         <Typography variant="h4" sx={{ color: "white", pb: 3 }}>
-          All users
+          تمام کاربران
         </Typography>
         <Box sx={{ pb: 2, display: "flex", justifyContent: "right" }}>
           <Button variant="contained" color="success" startIcon={<AddIcon />}>
             {" "}
-            Create user
+            ایجاد کاربر
           </Button>
         </Box>
         <Paper sx={{ bgcolor: "secondary.midNightBlue" }}>

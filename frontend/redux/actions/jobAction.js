@@ -22,7 +22,7 @@ export const jobLoadAction =
       });
     } catch (error) {
       const errorMessage =
-        error.response?.data?.error || error.message || "An error occurred";
+        error.response?.data?.error || error.message || "خطایی رخ داد";
       dispatch({
         type: JOB_LOAD_FAIL,
         payload: errorMessage,

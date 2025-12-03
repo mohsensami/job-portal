@@ -63,7 +63,7 @@ const HeaderTop = () => {
                         size="large"
                         edge="start"
                         color="inherit"
-                        aria-label="open drawer"
+                        aria-label="باز کردن منو"
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
@@ -74,13 +74,13 @@ const HeaderTop = () => {
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
                     >
-                        HR APP
+                        اپلیکیشن منابع انسانی
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
-                        <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+                        <StyledInputBase placeholder="جستجو…" inputProps={{ 'aria-label': 'جستجو' }} />
                     </Search>
                 </Toolbar>
             </AppBar>

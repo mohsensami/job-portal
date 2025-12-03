@@ -6,13 +6,13 @@ const errorHandler = (err, req, res, next) => {
     error.message = err.message;
 
     if (err.name === "CastError") {
-        const message = `Ressource not found ${err.value}`;
+        const message = `منبع یافت نشد ${err.value}`;
         error = new ErrorResponse(message, 404);
     }
 
     //Mongoose duplicate value
     if (err.code === 11000) {
-        const message = "Duplicate field value entered";
+        const message = "مقدار تکراری وارد شده است";
         error = new ErrorResponse(message, 400);
     }
 
@@ -24,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
 
     res.status(error.codeStatus || 500).json({
         success: false,
-        error: error.message || "server error"
+        error: error.message || "خطای سرور"
     })
 
 }

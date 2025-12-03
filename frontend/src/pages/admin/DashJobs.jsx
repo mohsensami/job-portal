@@ -25,37 +25,37 @@ const DashJobs = () => {
     const columns = [
         {
             field: '_id',
-            headerName: 'Job ID',
+            headerName: 'شناسه شغل',
             width: 150,
             editable: true,
         },
         {
             field: 'title',
-            headerName: 'Job name',
+            headerName: 'نام شغل',
             width: 150,
         },
         {
             field: 'jobType',
-            headerName: 'Category',
+            headerName: 'دسته‌بندی',
             width: 150,
             valueGetter: (data) => data?.row?.jobType.jobTypeName,
         },
         {
             field: 'user',
-            headerName: 'User',
+            headerName: 'کاربر',
             width: 150,
             valueGetter: (data) => data?.row?.user.firstName,
         },
         {
             field: 'available',
-            headerName: 'available',
+            headerName: 'در دسترس',
             width: 150,
-            renderCell: (values) => (values.row.available ? 'Yes' : 'No'),
+            renderCell: (values) => (values.row.available ? 'بله' : 'خیر'),
         },
 
         {
             field: 'salary',
-            headerName: 'Salary',
+            headerName: 'حقوق',
             type: Number,
             width: 150,
             renderCell: (values) => '$' + values.row.salary,
@@ -71,11 +71,11 @@ const DashJobs = () => {
                             style={{ color: 'white', textDecoration: 'none' }}
                             to={`/admin/edit/job/${values.row._id}`}
                         >
-                            Edit
+                            ویرایش
                         </Link>
                     </Button>
                     <Button onClick={(e) => deleteJobById(e, values.row._id)} variant="contained" color="error">
-                        Delete
+                        حذف
                     </Button>
                 </Box>
             ),
@@ -85,13 +85,13 @@ const DashJobs = () => {
     return (
         <Box>
             <Typography variant="h4" sx={{ color: 'white', pb: 3 }}>
-                Jobs list
+                فهرست شغل‌ها
             </Typography>
             <Box sx={{ pb: 2, display: 'flex', justifyContent: 'right' }}>
                 <Button variant="contained" color="success" startIcon={<AddIcon />}>
                     {' '}
                     <Link style={{ color: 'white', textDecoration: 'none' }} to="/admin/job/create">
-                        Create Job
+                        ایجاد شغل
                     </Link>
                 </Button>
             </Box>

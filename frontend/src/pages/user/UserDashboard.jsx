@@ -12,19 +12,19 @@ const UserDashboard = () => {
         <>
             <Box>
                 <Typography variant="h4" sx={{ color: 'white', pb: 3 }}>
-                    Dashboard
+                    داشبورد
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2, md: 4 }}>
                     <StatComponent
                         value={user && moment(user.createdAt).format('YYYY / MM / DD')}
                         icon={<CalendarMonthIcon sx={{ color: '#fafafa', fontSize: 30 }} />}
-                        description="Member since"
+                        description="عضو از"
                         money=""
                     />
                     <StatComponent
                         value={user && user.jobsHistory.length}
                         icon={<WorkIcon sx={{ color: '#fafafa', fontSize: 30 }} />}
-                        description="Number of jobs submitted"
+                        description="تعداد شغل‌های درخواست شده"
                         money=""
                     />
                 </Stack>

@@ -5,7 +5,7 @@ exports.signup = async (req, res, next) => {
     const { email } = req.body;
     const userExist = await User.findOne({ email });
     if (userExist) {
-        return next(new ErrorResponse('E-mail already registred', 400));
+        return next(new ErrorResponse('این ایمیل قبلاً ثبت شده است', 400));
     }
     try {
         const user = await User.create(req.body);
@@ -23,21 +23,21 @@ exports.signin = async (req, res, next) => {
         const { email, password } = req.body;
         //validation
         if (!email) {
-            return next(new ErrorResponse('please add an email', 403));
+            return next(new ErrorResponse('لطفاً ایمیل را وارد کنید', 403));
         }
         if (!password) {
-            return next(new ErrorResponse('please add a password', 403));
+            return next(new ErrorResponse('لطفاً رمز عبور را وارد کنید', 403));
         }
 
         //check user email
         const user = await User.findOne({ email });
         if (!user) {
-            return next(new ErrorResponse('invalid credentials', 400));
+            return next(new ErrorResponse('اطلاعات ورود نامعتبر است', 400));
         }
         //check password
         const isMatched = await user.comparePassword(password);
         if (!isMatched) {
-            return next(new ErrorResponse('invalid credentials', 400));
+            return next(new ErrorResponse('اطلاعات ورود نامعتبر است', 400));
         }
 
         sendTokenResponse(user, 200, res);
@@ -61,7 +61,7 @@ exports.logout = (req, res, next) => {
     res.clearCookie('token');
     res.status(200).json({
         success: true,
-        message: 'logged out',
+        message: 'خروج انجام شد',
     });
 };
 

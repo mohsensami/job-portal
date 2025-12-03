@@ -17,7 +17,7 @@ import { useTheme } from '@emotion/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogoutAction } from '../../redux/actions/userAction';
 
-const pages = ['Home', 'Log In'];
+const pages = ['خانه', 'ورود'];
 
 
 const Navbar = () => {
@@ -77,13 +77,13 @@ const Navbar = () => {
                             textDecoration: 'none',
                         }}
                     >
-                        JOB PORTAL
+                        پورتال شغل
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
-                            aria-label="account of current user"
+                            aria-label="حساب کاربری فعلی"
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
                             onClick={handleOpenNavMenu}
@@ -133,7 +133,7 @@ const Navbar = () => {
                             textDecoration: 'none',
                         }}
                     >
-                        JOB PORTAL
+                        پورتال شغل
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {/* menu desktop */}
@@ -142,16 +142,16 @@ const Navbar = () => {
                             onClick={handleCloseNavMenu}
                             sx={{ my: 2, color: 'white', display: 'block' }}>
                             <Link to="/" style={{ color: 'white', textDecoration: "none" }}>
-                                Home
+                                خانه
                             </Link>
                         </Button>
 
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
+                        <Tooltip title="باز کردن تنظیمات">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="" />
+                                <Avatar alt="کاربر" src="" />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -172,21 +172,21 @@ const Navbar = () => {
                         >
 
                             <MenuItem onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center"><Link style={{ textDecoration: "none", color: palette.primary.main }} to="/admin/dashboard">Admin Dashboard</Link></Typography>
+                                <Typography textAlign="center"><Link style={{ textDecoration: "none", color: palette.primary.main }} to="/admin/dashboard">داشبورد مدیر</Link></Typography>
                             </MenuItem>
                             <MenuItem onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center"><Link style={{ textDecoration: "none", color: palette.primary.main }} to="/user/dashboard">User Dashboard</Link></Typography>
+                                <Typography textAlign="center"><Link style={{ textDecoration: "none", color: palette.primary.main }} to="/user/dashboard">داشبورد کاربر</Link></Typography>
                             </MenuItem>
 
                             {
                                 !userInfo ?
 
                                     <MenuItem onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center"><Link style={{ textDecoration: "none", color: palette.primary.main }} to="/login">Log In</Link></Typography>
+                                        <Typography textAlign="center"><Link style={{ textDecoration: "none", color: palette.primary.main }} to="/login">ورود</Link></Typography>
                                     </MenuItem> :
 
                                     <MenuItem onClick={logOutUser}>
-                                        <Typography style={{ textDecoration: "none", color: palette.primary.main }} textAlign="center">Log Out</Typography>
+                                        <Typography style={{ textDecoration: "none", color: palette.primary.main }} textAlign="center">خروج</Typography>
                                     </MenuItem>
                             }
 

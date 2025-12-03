@@ -23,7 +23,7 @@ mongoose
         useCreateIndex: true,
         useFindAndModify: false,
     })
-    .then(() => console.log('DB connected'))
+    .then(() => console.log('اتصال به پایگاه داده برقرار شد'))
     .catch((err) => console.log(err));
 
 //MIDDLEWARE
@@ -54,5 +54,5 @@ app.use(errorHandler);
 const port = process.env.PORT || 9000;
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`سرور روی پورت ${port} در حال اجرا است`);
 });

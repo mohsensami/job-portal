@@ -17,7 +17,7 @@ const UserJobsHistory = () => {
             <Box>
                 <Typography variant="h4" sx={{ color: '#fafafa' }}>
                     {' '}
-                    Jobs History
+                    تاریخچه شغل‌ها
                 </Typography>
                 <Box>
                     {user &&

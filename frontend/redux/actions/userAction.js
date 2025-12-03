@@ -27,10 +27,10 @@ export const userSignInAction = (user) => async (dispatch) => {
       type: USER_SIGNIN_SUCCESS,
       payload: data,
     });
-    toast.success("Login Successfully!");
+    toast.success("ورود با موفقیت انجام شد!");
   } catch (error) {
     const errorMessage =
-      error.response?.data?.error || error.message || "An error occurred";
+      error.response?.data?.error || error.message || "خطایی رخ داد";
     dispatch({
       type: USER_SIGNIN_FAIL,
       payload: errorMessage,
@@ -49,10 +49,10 @@ export const userLogoutAction = () => async (dispatch) => {
       type: USER_LOGOUT_SUCCESS,
       payload: data,
     });
-    toast.success("Log out successfully!");
+    toast.success("خروج با موفقیت انجام شد!");
   } catch (error) {
     const errorMessage =
-      error.response?.data?.error || error.message || "An error occurred";
+      error.response?.data?.error || error.message || "خطایی رخ داد";
     dispatch({
       type: USER_LOGOUT_FAIL,
       payload: errorMessage,
@@ -72,7 +72,7 @@ export const userProfileAction = () => async (dispatch) => {
     });
   } catch (error) {
     const errorMessage =
-      error.response?.data?.error || error.message || "An error occurred";
+      error.response?.data?.error || error.message || "خطایی رخ داد";
     dispatch({
       type: USER_LOAD_FAIL,
       payload: errorMessage,
@@ -91,7 +91,7 @@ export const allUserAction = () => async (dispatch) => {
     });
   } catch (error) {
     const errorMessage =
-      error.response?.data?.error || error.message || "An error occurred";
+      error.response?.data?.error || error.message || "خطایی رخ داد";
     dispatch({
       type: ALL_USER_LOAD_FAIL,
       payload: errorMessage,
@@ -109,10 +109,10 @@ export const userApplyJobAction = (job) => async (dispatch) => {
       type: USER_APPLY_JOB_SUCCESS,
       payload: data,
     });
-    toast.success("Apply Successfully for this Job!");
+    toast.success("درخواست برای این شغل با موفقیت ثبت شد!");
   } catch (error) {
     const errorMessage =
-      error.response?.data?.error || error.message || "An error occurred";
+      error.response?.data?.error || error.message || "خطایی رخ داد";
     dispatch({
       type: USER_APPLY_JOB_FAIL,
       payload: errorMessage,
