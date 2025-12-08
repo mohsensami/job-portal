@@ -45,9 +45,10 @@ const Navbar = () => {
   };
 
   // log out user
-  const logOutUser = () => {
+  const logOutUser = (e) => {
+    e.preventDefault();
     dispatch(userLogoutAction());
-    window.location.reload(true);
+    // window.location.reload(true);
     setTimeout(() => {
       navigate("/");
     }, 500);
