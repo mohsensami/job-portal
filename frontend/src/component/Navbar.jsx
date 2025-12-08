@@ -146,6 +146,9 @@ const Navbar = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="باز کردن تنظیمات">
+              <span style={{ marginLeft: "10px" }}>
+                {userInfo?.info?.firstName} {userInfo?.info?.lastName}
+              </span>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="کاربر" src="" />
               </IconButton>
@@ -156,18 +159,18 @@ const Navbar = () => {
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: "top",
-                horizontal: "right",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "right",
+                horizontal: "left",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">
+                <Typography>
                   <Link
                     style={{
                       textDecoration: "none",
