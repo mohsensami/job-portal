@@ -5,6 +5,7 @@ const baseURL =
 const axiosInstance = axios.create({
   baseURL,
   // timeout: 5000, // Optional timeout value in milliseconds
+  withCredentials: true, // برای ارسال کوکی‌ها
   headers: {
     "Content-Type": "application/json",
   },
