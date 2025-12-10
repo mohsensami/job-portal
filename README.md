@@ -18,8 +18,6 @@ A comprehensive job search and application platform built with modern MERN Stack
 - [مشارکت / Contributing](#-مشارکت--contributing)
 - [مجوز / License](#-مجوز--license)
 
----
-
 ## ✨ ویژگی‌ها / Features
 
 ### 🔐 احراز هویت / Authentication
