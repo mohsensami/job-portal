@@ -36,15 +36,46 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+// CORS Configuration - Allow all origins
 app.use(
   cors({
-    origin:
-      process.env.FRONTEND_URL ||
-      "http://localhost:5173" ||
-      "https://job-portal-sami.netlify.app",
-    credentials: true, // برای ارسال کوکی‌ها
+    origin: true, // Allow all origins
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+      "Access-Control-Allow-Origin",
+    ],
+    exposedHeaders: ["Authorization"],
+    optionsSuccessStatus: 200,
   })
 );
+
+// Additional CORS headers middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+  );
+  
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
 
 //ROUTES MIDDLEWARE
 // app.get('/', (req, res) => {
