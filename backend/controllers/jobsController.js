@@ -25,7 +25,9 @@ exports.createJob = async (req, res, next) => {
 //single job
 exports.singleJob = async (req, res, next) => {
     try {
-        const job = await Job.findById(req.params.id);
+        const job = await Job.findById(req.params.id)
+            .populate('jobType', 'jobTypeName')
+            .populate('user', 'firstName lastName email');
         res.status(200).json({
             success: true,
             job,
