@@ -16,7 +16,7 @@ import {
   Bookmark,
   Share,
 } from "@mui/icons-material";
-import { formatDate } from "../utils";
+import { formatDate, formatPrice } from "../utils";
 
 const JobHeader = ({ job, isBookmarked, onBookmarkToggle, onShare }) => {
   const theme = useTheme();
@@ -84,7 +84,7 @@ const JobHeader = ({ job, isBookmarked, onBookmarkToggle, onShare }) => {
                 variant="body1"
                 sx={{ color: "#666", fontWeight: 500 }}
               >
-                {job?.salary ? `$${job.salary}` : "توافقی"}
+                {formatPrice(job?.salary)}
               </Typography>
             </Stack>
             {job?.createdAt && (

@@ -1,6 +1,6 @@
 import { Stack, Typography, Paper, Divider, useTheme } from "@mui/material";
 import { LocationOn, AttachMoney, Work, AccessTime } from "@mui/icons-material";
-import { formatDate } from "../utils";
+import { formatDate, formatPrice } from "../utils";
 
 const JobDetailsCard = ({ job }) => {
   const theme = useTheme();
@@ -23,7 +23,7 @@ const JobDetailsCard = ({ job }) => {
         <AttachMoney sx={{ color: theme.palette.primary.main, fontSize: 20 }} />
       ),
       label: "حقوق",
-      value: job?.salary ? `$${job.salary}` : "توافقی",
+      value: formatPrice(job?.salary),
     },
     {
       icon: (

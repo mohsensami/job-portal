@@ -1,3 +1,5 @@
+import { formatPrice as formatPriceUtil } from "../../utils.ts";
+
 /**
  * فرمت تاریخ به صورت نسبی (امروز، دیروز، X روز پیش و...)
  * @param {string} dateString - رشته تاریخ
@@ -21,3 +23,10 @@ export const formatDate = (dateString) => {
     return "";
   }
 };
+
+/**
+ * فرمت کردن قیمت به تومان با جداکننده هزارگان
+ * @param {string|number} price - قیمت به دلار
+ * @returns {string} - قیمت فرمت شده به تومان
+ */
+export const formatPrice = formatPriceUtil;

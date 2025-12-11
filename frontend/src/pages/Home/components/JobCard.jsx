@@ -18,6 +18,7 @@ import {
   ArrowForward,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { formatPrice } from "../../../utils";
 
 const JobCard = ({ job }) => {
   const theme = useTheme();
@@ -121,7 +122,7 @@ const JobCard = ({ job }) => {
                 <Stack direction="row" spacing={0.5} alignItems="center">
                   <AttachMoney sx={{ color: "#666", fontSize: 18 }} />
                   <Typography variant="body2" sx={{ color: "#666" }}>
-                    ${job.salary}
+                    {formatPrice(job.salary)}
                   </Typography>
                 </Stack>
               )}
