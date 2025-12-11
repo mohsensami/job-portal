@@ -1,42 +1,4 @@
-@font-face {
-  font-family: IRANSansX;
-  font-style: normal;
-  font-weight: 300;
-  src: url("./assets/fonts/woff/IRANSansXFaNum-Light.woff") format("woff"),
-    url("./assets/fonts/woff2/IRANSansXFaNum-Light.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: IRANSansX;
-  font-style: normal;
-  font-weight: 500;
-  src: url("./assets/fonts/woff/IRANSansXFaNum-medium.woff") format("woff"),
-    url("./assets/fonts/woff2/IRANSansXFaNum-medium.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: IRANSansX;
-  font-style: normal;
-  font-weight: 800;
-  src: url("./assets/fonts/woff/IRANSansXFaNum-extrabold.woff") format("woff"),
-    url("./assets/fonts/woff2/IRANSansXFaNum-extrabold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: IRANSansX;
-  font-style: normal;
-  font-weight: bold;
-  src: url("./assets/fonts/woff/IRANSansXFaNum-Bold.woff") format("woff"),
-    url("./assets/fonts/woff2/IRANSansXFaNum-Bold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: IRANSansX;
-  font-style: normal;
-  font-weight: normal;
-  src: url("./assets/fonts/woff/IRANSansXFaNum-Regular.woff") format("woff"),
-    url("./assets/fonts/woff2/IRANSansXFaNum-Regular.woff2") format("woff2");
-}
+/* Fonts are now loaded via fonts.js using Vite's asset handling */
 
 .form_style {
   position: relative;
