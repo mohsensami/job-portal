@@ -75,7 +75,6 @@ const Navbar = () => {
           >
             پورتال شغل
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -144,87 +143,101 @@ const Navbar = () => {
             </Button>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="باز کردن تنظیمات">
-              <span style={{ marginLeft: "10px" }}>
-                {userInfo?.info?.firstName} {userInfo?.info?.lastName}
-              </span>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="کاربر" src="" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      color: palette.primary.main,
-                    }}
-                    to="/admin/dashboard"
-                  >
-                    داشبورد مدیر
-                  </Link>
-                </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      color: palette.primary.main,
-                    }}
-                    to="/user/dashboard"
-                  >
-                    داشبورد کاربر
-                  </Link>
-                </Typography>
-              </MenuItem>
+          {userInfo && userInfo.success ? (
+            <>
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="باز کردن تنظیمات">
+                  <span style={{ marginLeft: "10px" }}>
+                    {userInfo?.info?.firstName} {userInfo?.info?.lastName}
+                  </span>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="کاربر" src="" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography>
+                      <Link
+                        style={{
+                          textDecoration: "none",
+                          color: palette.primary.main,
+                        }}
+                        to="/admin/dashboard"
+                      >
+                        داشبورد مدیر
+                      </Link>
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">
+                      <Link
+                        style={{
+                          textDecoration: "none",
+                          color: palette.primary.main,
+                        }}
+                        to="/user/dashboard"
+                      >
+                        داشبورد کاربر
+                      </Link>
+                    </Typography>
+                  </MenuItem>
 
-              {!userInfo ? (
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">
-                    <Link
-                      style={{
-                        textDecoration: "none",
-                        color: palette.primary.main,
-                      }}
-                      to="/login"
-                    >
-                      ورود
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              ) : (
-                <MenuItem onClick={logOutUser}>
-                  <Typography
-                    style={{
-                      textDecoration: "none",
-                      color: palette.primary.main,
-                    }}
-                    textAlign="center"
-                  >
-                    خروج
-                  </Typography>
-                </MenuItem>
-              )}
-            </Menu>
-          </Box>
+                  {!userInfo ? (
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">
+                        <Link
+                          style={{
+                            textDecoration: "none",
+                            color: palette.primary.main,
+                          }}
+                          to="/login"
+                        >
+                          ورود
+                        </Link>
+                      </Typography>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem onClick={logOutUser}>
+                      <Typography
+                        style={{
+                          textDecoration: "none",
+                          color: palette.primary.main,
+                        }}
+                        textAlign="center"
+                      >
+                        خروج
+                      </Typography>
+                    </MenuItem>
+                  )}
+                </Menu>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => navigate("/login")}
+              >
+                ورود
+              </Button>
+            </>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
