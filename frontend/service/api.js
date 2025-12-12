@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const baseURL =
-  import.meta.env.VITE_BASE_URL || "https://job-portal-j3fi.onrender.com";
+const baseURL = import.meta.env.VITE_BASE_URL || "http://localhost:8000";
 const axiosInstance = axios.create({
   baseURL,
   // timeout: 5000, // Optional timeout value in milliseconds
@@ -15,12 +14,25 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
-      const parsedUserInfo = JSON.parse(userInfo);
-      console.log(parsedUserInfo);
-      const token = parsedUserInfo?.token;
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
+      try {
+        const parsedUserInfo = JSON.parse(userInfo);
+        const token = parsedUserInfo?.token;
+        if (token) {
+          config.headers["Authorization"] = `${token}`;
+          // Debug log (remove in production)
+          console.log("Token added to request:", {
+            url: config.url,
+            hasToken: !!token,
+            tokenLength: token?.length,
+          });
+        } else {
+          console.warn("Token not found in userInfo", parsedUserInfo);
+        }
+      } catch (error) {
+        console.error("Error parsing userInfo from localStorage:", error);
       }
+    } else {
+      console.warn("userInfo not found in localStorage");
     }
     return config;
   },
@@ -34,8 +46,14 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    // toast.error(error.message);
-
+    // Log 401 errors for debugging
+    if (error.response?.status === 401) {
+      console.error("401 Unauthorized:", {
+        url: error.config?.url,
+        message: error.response?.data?.error || error.message,
+        hasToken: !!error.config?.headers?.Authorization,
+      });
+    }
     return Promise.reject(error);
   }
 );
