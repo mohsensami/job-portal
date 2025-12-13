@@ -23,6 +23,7 @@ import SingleJob from "./pages/SingleJob";
 import DashUsers from "./pages/admin/DashUsers";
 import DashJobs from "./pages/admin/DashJobs";
 import Create from "./pages/admin/job/Create";
+import Edit from "./pages/admin/job/Edit";
 
 // تنظیم کش Emotion برای RTL در MUI
 const rtlCache = createCache({
@@ -38,6 +39,7 @@ const AdminDashboardHOC = Layout(AdminDashboard);
 const DashUsersHOC = Layout(DashUsers);
 const DashJobsHOC = Layout(DashJobs);
 const CreateHOC = Layout(Create);
+const EditHOC = Layout(Edit);
 
 function App() {
   return (
@@ -110,6 +112,14 @@ function App() {
                     element={
                       <AdminRoute>
                         <CreateHOC />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/edit/job/:job_id"
+                    element={
+                      <AdminRoute>
+                        <EditHOC />
                       </AdminRoute>
                     }
                   />
