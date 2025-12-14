@@ -1,4 +1,11 @@
-import { Stack, Typography, Paper, Divider, useTheme } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  Paper,
+  Divider,
+  useTheme,
+  Box,
+} from "@mui/material";
 import { Description } from "@mui/icons-material";
 
 const JobDescription = ({ description }) => {
@@ -22,17 +29,26 @@ const JobDescription = ({ description }) => {
         </Typography>
       </Stack>
       <Divider sx={{ mb: 3 }} />
-      <Typography
-        variant="body1"
-        sx={{
-          color: "#333",
-          lineHeight: 2,
-          whiteSpace: "pre-wrap",
-          fontSize: "1rem",
-        }}
-      >
-        {description || "توضیحاتی برای این موقعیت شغلی ثبت نشده است."}
-      </Typography>
+      {description ? (
+        <Box
+          dangerouslySetInnerHTML={{
+            __html: description,
+          }}
+        />
+      ) : (
+        <Typography
+          variant="body1"
+          sx={{
+            color: "#999",
+            lineHeight: 2,
+            fontSize: "1rem",
+            fontStyle: "italic",
+            fontFamily: '"IRANSansX", sans-serif',
+          }}
+        >
+          توضیحاتی برای این موقعیت شغلی ثبت نشده است.
+        </Typography>
+      )}
     </Paper>
   );
 };

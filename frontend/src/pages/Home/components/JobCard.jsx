@@ -135,20 +135,11 @@ const JobCard = ({ job }) => {
                 </Stack>
               )}
             </Stack>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "#666",
-                mt: 1.5,
-                lineHeight: 1.6,
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: job.description || "",
               }}
-            >
-              {job.description}
-            </Typography>
+            />
           </Box>
         </Stack>
       </CardContent>
