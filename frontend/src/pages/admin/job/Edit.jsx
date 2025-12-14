@@ -16,6 +16,8 @@ import {
   Alert,
 } from "@mui/material";
 import { toast } from "react-toastify";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import axiosInstance from "../../../../service/api";
 
 const Edit = () => {
@@ -182,25 +184,170 @@ const Edit = () => {
             />
 
             {/* Description Field */}
-            <Controller
-              name="description"
-              control={control}
-              rules={{
-                required: "توضیحات شغل الزامی است",
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="توضیحات شغل"
-                  fullWidth
-                  multiline
-                  rows={6}
-                  error={!!errors.description}
-                  helperText={errors.description?.message}
-                  required
-                />
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ mb: 1, fontWeight: 500 }}
+                color={errors.description ? "error" : "text.primary"}
+              >
+                توضیحات شغل <span style={{ color: "red" }}>*</span>
+              </Typography>
+              <Controller
+                name="description"
+                control={control}
+                rules={{
+                  required: "توضیحات شغل الزامی است",
+                }}
+                render={({ field }) => (
+                  <Box
+                    sx={{
+                      "& .quill": {
+                        direction: "ltr",
+                        fontFamily: '"IRANSansX", sans-serif',
+                        "& .ql-container": {
+                          minHeight: "200px",
+                          direction: "ltr",
+                          fontFamily: '"IRANSansX", sans-serif',
+                          borderBottomLeftRadius: "4px",
+                          borderBottomRightRadius: "4px",
+                        },
+                        "& .ql-editor": {
+                          minHeight: "200px",
+                          direction: "ltr",
+                          textAlign: "left",
+                          fontFamily: '"IRANSansX", sans-serif',
+                          fontSize: "14px",
+                          lineHeight: "1.8",
+                          "&.ql-blank::before": {
+                            left: "auto",
+                            right: "15px",
+                            textAlign: "left",
+                            fontStyle: "normal",
+                            color: "rgba(0, 0, 0, 0.6)",
+                            fontFamily: '"IRANSansX", sans-serif',
+                          },
+                          "& p, & h1, & h2, & h3, & h4, & h5, & h6": {
+                            textAlign: "left",
+                            direction: "ltr",
+                            fontFamily: '"IRANSansX", sans-serif',
+                            margin: "0 0 8px 0",
+                          },
+                          "& ul, & ol": {
+                            paddingRight: "1.5em",
+                            paddingLeft: "0",
+                            textAlign: "left",
+                            direction: "ltr",
+                            "& li": {
+                              textAlign: "left",
+                              direction: "ltr",
+                              fontFamily: '"IRANSansX", sans-serif',
+                            },
+                          },
+                          "& blockquote": {
+                            borderRight: "4px solid #ccc",
+                            borderLeft: "none",
+                            paddingRight: "16px",
+                            paddingLeft: "0",
+                            marginRight: "0",
+                            marginLeft: "0",
+                            textAlign: "left",
+                            direction: "ltr",
+                            fontFamily: '"IRANSansX", sans-serif',
+                          },
+                          "& a": {
+                            direction: "ltr",
+                            textAlign: "left",
+                            fontFamily: '"IRANSansX", sans-serif',
+                          },
+                        },
+                        "& .ql-toolbar": {
+                          direction: "ltr",
+                          textAlign: "left",
+                          fontFamily: '"IRANSansX", sans-serif',
+                          borderTopLeftRadius: "4px",
+                          borderTopRightRadius: "4px",
+                          display: "flex",
+                          flexDirection: "row-reverse",
+                          "& .ql-formats": {
+                            marginLeft: "8px",
+                            marginRight: "0",
+                            display: "flex",
+                            flexDirection: "row-reverse",
+                            "&:first-of-type": {
+                              marginLeft: "0",
+                            },
+                            "&:last-of-type": {
+                              marginRight: "8px",
+                            },
+                          },
+                          "& button": {
+                            direction: "ltr",
+                            "&.ql-active": {
+                              "& svg": {
+                                transform: "scale(1.1)",
+                              },
+                            },
+                          },
+                          "& .ql-picker": {
+                            direction: "ltr",
+                            "& .ql-picker-label": {
+                              direction: "ltr",
+                            },
+                            "& .ql-picker-options": {
+                              direction: "ltr",
+                              textAlign: "left",
+                            },
+                          },
+                        },
+                        "& .ql-snow .ql-stroke": {
+                          stroke: "currentColor",
+                        },
+                        "& .ql-snow .ql-fill": {
+                          fill: "currentColor",
+                        },
+                      },
+                    }}
+                  >
+                    <ReactQuill
+                      theme="snow"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="توضیحات شغل را وارد کنید..."
+                      modules={{
+                        toolbar: [
+                          [{ header: [1, 2, 3, false] }],
+                          ["bold", "italic", "underline", "strike"],
+                          [{ list: "ordered" }, { list: "bullet" }],
+                          [{ align: [] }],
+                          ["link"],
+                          ["clean"],
+                        ],
+                      }}
+                      formats={[
+                        "header",
+                        "bold",
+                        "italic",
+                        "underline",
+                        "strike",
+                        "list",
+                        "bullet",
+                        "align",
+                        "link",
+                      ]}
+                    />
+                  </Box>
+                )}
+              />
+              {errors.description && (
+                <Typography
+                  variant="caption"
+                  color="error"
+                  sx={{ mt: 0.5, ml: 1.75 }}
+                >
+                  {errors.description.message}
+                </Typography>
               )}
-            />
+            </Box>
 
             {/* Salary Field */}
             <Controller
