@@ -21,7 +21,7 @@ import axiosInstance from "../../../service/api";
 const DashCat = () => {
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [jobToDelete, setJobToDelete] = useState(null);
+  const [jobTypeToDelete, setJobTypeToDelete] = useState(null);
 
   // Load job types list
   const {
@@ -45,45 +45,47 @@ const DashCat = () => {
     );
   }
 
-  // Delete job mutation
-  const deleteJobMutation = useMutation({
-    mutationFn: async (jobId) => {
-      const { data } = await axiosInstance.delete(`/api/type/delete/${jobId}`);
+  // Delete job type mutation
+  const deleteJobTypeMutation = useMutation({
+    mutationFn: async (jobTypeId) => {
+      const { data } = await axiosInstance.delete(
+        `/api/type/delete/${jobTypeId}`
+      );
       return data;
     },
     onSuccess: () => {
       toast.success("دسته‌بندی شغل با موفقیت حذف شد!");
       queryClient.invalidateQueries({ queryKey: ["jobTypes"] });
       setDeleteDialogOpen(false);
-      setJobToDelete(null);
+      setJobTypeToDelete(null);
     },
     onError: (error) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
-        "خطایی در حذف شغل رخ داد";
+        "خطایی در حذف دسته‌بندی رخ داد";
       toast.error(errorMessage);
       setDeleteDialogOpen(false);
-      setJobToDelete(null);
+      setJobTypeToDelete(null);
     },
   });
 
-  //delete job by Id
-  const deleteJobById = (e, id) => {
+  // Open delete confirmation dialog
+  const deleteJobTypeById = (e, id) => {
     e.preventDefault();
-    setJobToDelete(id);
+    setJobTypeToDelete(id);
     setDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (jobToDelete) {
-      deleteJobMutation.mutate(jobToDelete);
+    if (jobTypeToDelete) {
+      deleteJobTypeMutation.mutate(jobTypeToDelete);
     }
   };
 
   const handleCancelDelete = () => {
     setDeleteDialogOpen(false);
-    setJobToDelete(null);
+    setJobTypeToDelete(null);
   };
 
   const columns = [
@@ -126,12 +128,12 @@ const DashCat = () => {
           }}
         >
           <Button
-            onClick={(e) => deleteJobById(e, values.row._id)}
+            onClick={(e) => deleteJobTypeById(e, values.row._id)}
             variant="contained"
             color="error"
-            disabled={deleteJobMutation.isPending}
+            disabled={deleteJobTypeMutation.isPending}
           >
-            {deleteJobMutation.isPending ? (
+            {deleteJobTypeMutation.isPending ? (
               <CircularProgress size={20} sx={{ color: "white" }} />
             ) : (
               "حذف"
@@ -171,7 +173,6 @@ const DashCat = () => {
           />
         </Box>
       </Paper>
-
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={deleteDialogOpen}
@@ -179,17 +180,19 @@ const DashCat = () => {
         aria-labelledby="delete-dialog-title"
         aria-describedby="delete-dialog-description"
       >
-        <DialogTitle id="delete-dialog-title">تأیید حذف شغل</DialogTitle>
+        <DialogTitle id="delete-dialog-title">
+          تأیید حذف دسته‌بندی شغل
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
-            آیا از حذف این شغل اطمینان دارید؟ این عمل غیرقابل بازگشت است.
+            آیا از حذف این دسته‌بندی اطمینان دارید؟ این عمل غیرقابل بازگشت است.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={handleCancelDelete}
             color="primary"
-            disabled={deleteJobMutation.isPending}
+            disabled={deleteJobTypeMutation.isPending}
           >
             انصراف
           </Button>
@@ -197,14 +200,14 @@ const DashCat = () => {
             onClick={handleConfirmDelete}
             color="error"
             variant="contained"
-            disabled={deleteJobMutation.isPending}
+            disabled={deleteJobTypeMutation.isPending}
             startIcon={
-              deleteJobMutation.isPending ? (
+              deleteJobTypeMutation.isPending ? (
                 <CircularProgress size={16} />
               ) : null
             }
           >
-            {deleteJobMutation.isPending ? "در حال حذف..." : "حذف"}
+            {deleteJobTypeMutation.isPending ? "در حال حذف..." : "حذف"}
           </Button>
         </DialogActions>
       </Dialog>
