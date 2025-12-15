@@ -21,18 +21,10 @@ import axiosInstance from "../../../service/api";
 import { jobLoadAction } from "../../../redux/actions/jobAction";
 import { formatPrice } from "../../utils";
 
-const DashJobs = () => {
+const DashCat = () => {
   const dispatch = useDispatch();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
-
-  useEffect(() => {
-    dispatch(jobLoadAction());
-  }, [dispatch]);
-
-  const { jobs, loading } = useSelector((state) => state.loadJobs);
-  let data = [];
-  data = jobs !== undefined && jobs.length > 0 ? jobs : [];
 
   // Delete job mutation
   const deleteJobMutation = useMutation({
@@ -170,8 +162,8 @@ const DashJobs = () => {
         <Box sx={{ height: 400, width: "100%" }}>
           <DataGrid
             getRowId={(row) => row._id}
-            rows={data}
-            loading={loading}
+            // rows={data}
+            // loading={loading}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
@@ -220,4 +212,4 @@ const DashJobs = () => {
   );
 };
 
-export default DashJobs;
+export default DashCat;

@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
+
 import { useForm, Controller } from "react-hook-form";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useQuery, useMutation } from "@tanstack/react-query";
+
+import { useAppQueryClient } from "../../../lib/react-query";
+
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   Box,
   Button,
@@ -15,90 +21,129 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+
 import { toast } from "react-toastify";
+
 import ReactQuill from "react-quill";
+
 import "react-quill/dist/quill.snow.css";
+
 import axiosInstance from "../../../../service/api";
 
 const Edit = () => {
   const { job_id } = useParams();
+
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
+  const queryClient = useAppQueryClient();
+
   const {
     control,
+
     handleSubmit,
+
     reset,
+
     formState: { errors },
   } = useForm({
     defaultValues: {
       title: "",
+
       description: "",
+
       salary: "",
+
       location: "",
+
       jobType: "",
     },
   });
 
   // Fetch job data
+
   const {
     data: jobData,
+
     isLoading: isLoadingJob,
+
     error: jobError,
   } = useQuery({
     queryKey: ["job", job_id],
+
     queryFn: async () => {
       const { data } = await axiosInstance.get(`/api/job/${job_id}`);
+
       return data;
     },
+
     enabled: !!job_id,
   });
 
   // Fetch job types
+
   const {
     data: jobTypesData,
+
     isLoading: isLoadingJobTypes,
+
     error: jobTypesError,
   } = useQuery({
     queryKey: ["jobTypes"],
+
     queryFn: async () => {
       const { data } = await axiosInstance.get("/api/type/jobs");
+
       return data;
     },
   });
 
   // Update form when job data is loaded
+
   useEffect(() => {
     if (jobData?.job) {
       reset({
         title: jobData.job.title || "",
+
         description: jobData.job.description || "",
+
         salary: jobData.job.salary || "",
+
         location: jobData.job.location || "",
+
         jobType: jobData.job.jobType?._id || jobData.job.jobType || "",
       });
     }
   }, [jobData, reset]);
 
   // Update job mutation
+
   const updateJobMutation = useMutation({
     mutationFn: async (formData) => {
       const { data } = await axiosInstance.put(
         `/api/job/update/${job_id}`,
+
         formData
       );
+
       return data;
     },
-    onSuccess: (data) => {
+
+    onSuccess: () => {
       toast.success("شغل با موفقیت به‌روزرسانی شد!");
+
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+
       queryClient.invalidateQueries({ queryKey: ["job", job_id] });
+
       navigate("/admin/jobs");
     },
+
     onError: (error) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
         "خطایی در به‌روزرسانی شغل رخ داد";
+
       toast.error(errorMessage);
     },
   });
@@ -112,8 +157,11 @@ const Edit = () => {
       <Box
         sx={{
           display: "flex",
+
           justifyContent: "center",
+
           alignItems: "center",
+
           minHeight: "400px",
         }}
       >
@@ -129,6 +177,7 @@ const Edit = () => {
           خطا در بارگذاری شغل:{" "}
           {jobError.response?.data?.error || jobError.message}
         </Alert>
+
         <Button
           variant="contained"
           onClick={() => navigate("/admin/jobs")}
@@ -161,13 +210,16 @@ const Edit = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             {/* Title Field */}
+
             <Controller
               name="title"
               control={control}
               rules={{
                 required: "عنوان شغل الزامی است",
+
                 maxLength: {
                   value: 70,
+
                   message: "عنوان نباید بیشتر از 70 کاراکتر باشد",
                 },
               }}
@@ -184,6 +236,7 @@ const Edit = () => {
             />
 
             {/* Description Field */}
+
             <Box>
               <Typography
                 variant="body2"
@@ -192,6 +245,7 @@ const Edit = () => {
               >
                 توضیحات شغل <span style={{ color: "red" }}>*</span>
               </Typography>
+
               <Controller
                 name="description"
                 control={control}
@@ -203,105 +257,167 @@ const Edit = () => {
                     sx={{
                       "& .quill": {
                         direction: "ltr",
+
                         fontFamily: '"IRANSansX", sans-serif',
+
                         "& .ql-container": {
                           minHeight: "200px",
+
                           direction: "ltr",
+
                           fontFamily: '"IRANSansX", sans-serif',
+
                           borderBottomLeftRadius: "4px",
+
                           borderBottomRightRadius: "4px",
                         },
+
                         "& .ql-editor": {
                           minHeight: "200px",
+
                           direction: "ltr",
+
                           textAlign: "left",
+
                           fontFamily: '"IRANSansX", sans-serif',
+
                           fontSize: "14px",
+
                           lineHeight: "1.8",
+
                           "&.ql-blank::before": {
                             left: "auto",
+
                             right: "15px",
+
                             textAlign: "left",
+
                             fontStyle: "normal",
+
                             color: "rgba(0, 0, 0, 0.6)",
+
                             fontFamily: '"IRANSansX", sans-serif',
                           },
+
                           "& p, & h1, & h2, & h3, & h4, & h5, & h6": {
                             textAlign: "left",
+
                             direction: "ltr",
+
                             fontFamily: '"IRANSansX", sans-serif',
+
                             margin: "0 0 8px 0",
                           },
+
                           "& ul, & ol": {
                             paddingRight: "1.5em",
+
                             paddingLeft: "0",
+
                             textAlign: "left",
+
                             direction: "ltr",
+
                             "& li": {
                               textAlign: "left",
+
                               direction: "ltr",
+
                               fontFamily: '"IRANSansX", sans-serif',
                             },
                           },
+
                           "& blockquote": {
                             borderRight: "4px solid #ccc",
+
                             borderLeft: "none",
+
                             paddingRight: "16px",
+
                             paddingLeft: "0",
+
                             marginRight: "0",
+
                             marginLeft: "0",
+
                             textAlign: "left",
+
                             direction: "ltr",
+
                             fontFamily: '"IRANSansX", sans-serif',
                           },
+
                           "& a": {
                             direction: "ltr",
+
                             textAlign: "left",
+
                             fontFamily: '"IRANSansX", sans-serif',
                           },
                         },
+
                         "& .ql-toolbar": {
                           direction: "ltr",
+
                           textAlign: "left",
+
                           fontFamily: '"IRANSansX", sans-serif',
+
                           borderTopLeftRadius: "4px",
+
                           borderTopRightRadius: "4px",
+
                           display: "flex",
+
                           flexDirection: "row-reverse",
+
                           "& .ql-formats": {
                             marginLeft: "8px",
+
                             marginRight: "0",
+
                             display: "flex",
+
                             flexDirection: "row-reverse",
+
                             "&:first-of-type": {
                               marginLeft: "0",
                             },
+
                             "&:last-of-type": {
                               marginRight: "8px",
                             },
                           },
+
                           "& button": {
                             direction: "ltr",
+
                             "&.ql-active": {
                               "& svg": {
                                 transform: "scale(1.1)",
                               },
                             },
                           },
+
                           "& .ql-picker": {
                             direction: "ltr",
+
                             "& .ql-picker-label": {
                               direction: "ltr",
                             },
+
                             "& .ql-picker-options": {
                               direction: "ltr",
+
                               textAlign: "left",
                             },
                           },
                         },
+
                         "& .ql-snow .ql-stroke": {
                           stroke: "currentColor",
                         },
+
                         "& .ql-snow .ql-fill": {
                           fill: "currentColor",
                         },
@@ -316,28 +432,42 @@ const Edit = () => {
                       modules={{
                         toolbar: [
                           [{ header: [1, 2, 3, false] }],
+
                           ["bold", "italic", "underline", "strike"],
+
                           [{ list: "ordered" }, { list: "bullet" }],
+
                           [{ align: [] }],
+
                           ["link"],
+
                           ["clean"],
                         ],
                       }}
                       formats={[
                         "header",
+
                         "bold",
+
                         "italic",
+
                         "underline",
+
                         "strike",
+
                         "list",
+
                         "bullet",
+
                         "align",
+
                         "link",
                       ]}
                     />
                   </Box>
                 )}
               />
+
               {errors.description && (
                 <Typography
                   variant="caption"
@@ -350,6 +480,7 @@ const Edit = () => {
             </Box>
 
             {/* Salary Field */}
+
             <Controller
               name="salary"
               control={control}
@@ -370,6 +501,7 @@ const Edit = () => {
             />
 
             {/* Location Field */}
+
             <Controller
               name="location"
               control={control}
@@ -385,8 +517,10 @@ const Edit = () => {
             />
 
             {/* Job Type Field */}
+
             <FormControl fullWidth error={!!errors.jobType} required>
               <InputLabel>نوع شغل</InputLabel>
+
               <Controller
                 name="jobType"
                 control={control}
@@ -416,6 +550,7 @@ const Edit = () => {
                   </Select>
                 )}
               />
+
               {errors.jobType && (
                 <Typography
                   variant="caption"
@@ -428,11 +563,15 @@ const Edit = () => {
             </FormControl>
 
             {/* Submit Button */}
+
             <Box
               sx={{
                 display: "flex",
+
                 gap: 2,
+
                 justifyContent: "flex-end",
+
                 mt: 2,
               }}
             >
@@ -444,6 +583,7 @@ const Edit = () => {
               >
                 انصراف
               </Button>
+
               <Button
                 type="submit"
                 variant="contained"
