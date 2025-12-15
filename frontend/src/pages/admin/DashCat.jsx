@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -11,30 +11,49 @@ import {
   DialogActions,
   CircularProgress,
 } from "@mui/material";
-import { DataGrid, gridClasses } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import { useDispatch, useSelector } from "react-redux";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
-import { jobLoadAction } from "../../../redux/actions/jobAction";
-import { formatPrice } from "../../utils";
 
 const DashCat = () => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
+
+  // Load job types list
+  const {
+    data: jobTypes = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["jobTypes"],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get("/api/type/jobs");
+      return data.jobT;
+    },
+  });
+
+  if (isError) {
+    toast.error(
+      error?.response?.data?.error ||
+        error.message ||
+        "خطا در بارگذاری دسته‌بندی‌ها"
+    );
+  }
 
   // Delete job mutation
   const deleteJobMutation = useMutation({
     mutationFn: async (jobId) => {
-      const { data } = await axiosInstance.delete(`/api/job/delete/${jobId}`);
+      const { data } = await axiosInstance.delete(`/api/type/delete/${jobId}`);
       return data;
     },
     onSuccess: () => {
-      toast.success("شغل با موفقیت حذف شد!");
-      dispatch(jobLoadAction());
+      toast.success("دسته‌بندی شغل با موفقیت حذف شد!");
+      queryClient.invalidateQueries({ queryKey: ["jobTypes"] });
       setDeleteDialogOpen(false);
       setJobToDelete(null);
     },
@@ -70,40 +89,29 @@ const DashCat = () => {
   const columns = [
     {
       field: "_id",
-      headerName: "شناسه شغل",
+      headerName: "شناسه دسته‌بندی",
       width: 150,
       editable: true,
     },
     {
-      field: "title",
-      headerName: "نام شغل",
+      field: "jobTypeName",
+      headerName: "نام دسته‌بندی",
       width: 150,
-    },
-    {
-      field: "jobType",
-      headerName: "دسته‌بندی",
-      width: 150,
-      valueGetter: (data) => data?.row?.jobType.jobTypeName,
     },
     {
       field: "user",
-      headerName: "کاربر",
+      headerName: "کاربر ایجادکننده",
       width: 150,
-      valueGetter: (data) => data?.row?.user.firstName,
+      valueGetter: (data) => data?.row?.user?.firstName || "نامشخص",
     },
     {
-      field: "available",
-      headerName: "در دسترس",
+      field: "createdAt",
+      headerName: "تاریخ ایجاد",
       width: 150,
-      renderCell: (values) => (values.row.available ? "بله" : "خیر"),
-    },
-
-    {
-      field: "salary",
-      headerName: "حقوق",
-      type: Number,
-      width: 150,
-      renderCell: (values) => formatPrice(values.row.salary),
+      valueGetter: (data) =>
+        data?.row?.createdAt
+          ? new Date(data.row.createdAt).toLocaleDateString("fa-IR")
+          : "-",
     },
 
     {
@@ -117,14 +125,6 @@ const DashCat = () => {
             width: "170px",
           }}
         >
-          <Button variant="contained">
-            <Link
-              style={{ color: "white", textDecoration: "none" }}
-              to={`/admin/edit/job/${values.row._id}`}
-            >
-              ویرایش
-            </Link>
-          </Button>
           <Button
             onClick={(e) => deleteJobById(e, values.row._id)}
             variant="contained"
@@ -145,7 +145,7 @@ const DashCat = () => {
   return (
     <Box>
       <Typography variant="h4" sx={{ color: "white", pb: 3 }}>
-        فهرست شغل‌ها
+        فهرست دسته‌بندی شغل‌ها
       </Typography>
       <Box sx={{ pb: 2, display: "flex", justifyContent: "right" }}>
         <Button variant="contained" color="success" startIcon={<AddIcon />}>
@@ -162,8 +162,8 @@ const DashCat = () => {
         <Box sx={{ height: 400, width: "100%" }}>
           <DataGrid
             getRowId={(row) => row._id}
-            // rows={data}
-            // loading={loading}
+            rows={jobTypes}
+            loading={isLoading}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
