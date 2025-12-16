@@ -12,16 +12,17 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
+import AddCat from "../../component/AddCat";
 
 const DashCat = () => {
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [jobTypeToDelete, setJobTypeToDelete] = useState(null);
+  const [addCategoryDialogOpen, setAddCategoryDialogOpen] = useState(false);
 
   // Load job types list
   const {
@@ -150,14 +151,13 @@ const DashCat = () => {
         فهرست دسته‌بندی شغل‌ها
       </Typography>
       <Box sx={{ pb: 2, display: "flex", justifyContent: "right" }}>
-        <Button variant="contained" color="success" startIcon={<AddIcon />}>
-          {" "}
-          <Link
-            style={{ color: "white", textDecoration: "none" }}
-            to="/admin/job/create"
-          >
-            ایجاد شغل
-          </Link>
+        <Button
+          variant="contained"
+          color="success"
+          startIcon={<AddIcon />}
+          onClick={() => setAddCategoryDialogOpen(true)}
+        >
+          دسته بندی جدید
         </Button>
       </Box>
       <Paper sx={{ bgcolor: "secondary.midNightBlue" }}>
@@ -210,6 +210,28 @@ const DashCat = () => {
             {deleteJobTypeMutation.isPending ? "در حال حذف..." : "حذف"}
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Add Category Dialog */}
+      <Dialog
+        open={addCategoryDialogOpen}
+        onClose={() => setAddCategoryDialogOpen(false)}
+        aria-labelledby="add-category-dialog-title"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle dir="rtl" id="add-category-dialog-title">
+          افزودن دسته‌بندی جدید
+        </DialogTitle>
+        <DialogContent>
+          <AddCat
+            onSuccess={() => {
+              queryClient.invalidateQueries({ queryKey: ["jobTypes"] });
+              setAddCategoryDialogOpen(false);
+            }}
+            onCancel={() => setAddCategoryDialogOpen(false)}
+          />
+        </DialogContent>
       </Dialog>
     </Box>
   );
