@@ -65,9 +65,16 @@ const Home = () => {
 
             {/* Main Content */}
             <Grid item xs={12} md={9}>
-              <Box sx={{ mb: 3 }}>
+              <Box
+                sx={{
+                  mb: 3,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   sx={{ fontWeight: 700, color: "#1a1a1a", mb: 1 }}
                 >
                   موقعیت‌های شغلی

@@ -48,7 +48,7 @@ const CategorySection = () => {
     <Box sx={{ py: 6, bgcolor: "#fafafa" }}>
       <Container>
         <Typography
-          variant="h4"
+          variant="h6"
           sx={{
             fontWeight: 700,
             mb: 4,

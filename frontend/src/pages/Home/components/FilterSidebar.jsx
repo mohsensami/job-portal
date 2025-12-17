@@ -31,7 +31,7 @@ const FilterSidebar = ({ setUniqueLocation, handleChangeCategory, cat }) => {
       >
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
           <Category sx={{ color: theme.palette.primary.main }} />
-          <Typography variant="h6" sx={{ color: "#1a1a1a", fontWeight: 600 }}>
+          <Typography variant="p" sx={{ color: "#1a1a1a", fontWeight: 600 }}>
             فیلتر بر اساس دسته‌بندی
           </Typography>
         </Stack>
@@ -54,7 +54,7 @@ const FilterSidebar = ({ setUniqueLocation, handleChangeCategory, cat }) => {
       >
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
           <LocationOn sx={{ color: theme.palette.primary.main }} />
-          <Typography variant="h6" sx={{ color: "#1a1a1a", fontWeight: 600 }}>
+          <Typography variant="p" sx={{ color: "#1a1a1a", fontWeight: 600 }}>
             فیلتر بر اساس موقعیت
           </Typography>
         </Stack>
@@ -104,7 +104,7 @@ const FilterSidebar = ({ setUniqueLocation, handleChangeCategory, cat }) => {
       >
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
           <FilterList sx={{ color: theme.palette.primary.main }} />
-          <Typography variant="h6" sx={{ color: "#1a1a1a", fontWeight: 600 }}>
+          <Typography variant="p" sx={{ color: "#1a1a1a", fontWeight: 600 }}>
             آمار سریع
           </Typography>
         </Stack>

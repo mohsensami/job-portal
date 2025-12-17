@@ -17,6 +17,7 @@ import {
   AccessTime,
   ArrowForward,
   ArrowBack,
+  Check,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../../utils";
@@ -50,10 +51,6 @@ const JobCard = ({ job }) => {
         border: "1px solid #e0e0e0",
         borderRadius: 2,
         transition: "all 0.3s ease",
-        "&:hover": {
-          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-          transform: "translateY(-2px)",
-        },
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -97,6 +94,7 @@ const JobCard = ({ job }) => {
                 fontWeight: 600,
                 mb: 1,
                 color: "#1a1a1a",
+                margin: "20px 0",
                 "&:hover": { color: theme.palette.primary.main },
               }}
             >
@@ -121,7 +119,7 @@ const JobCard = ({ job }) => {
               )}
               {job.salary && (
                 <Stack direction="row" spacing={0.5} alignItems="center">
-                  <AttachMoney sx={{ color: "#666", fontSize: 18 }} />
+                  <Check sx={{ color: "#666", fontSize: 18 }} />
                   <Typography variant="body2" sx={{ color: "#666" }}>
                     {formatPrice(job.salary)}
                   </Typography>
@@ -138,17 +136,12 @@ const JobCard = ({ job }) => {
             </Stack>
             <Box />
           </Box>
-          <CardActions sx={{ px: 3, pb: 2 }}>
+          <CardActions>
             <Button
               component={Link}
               to={`/job/${job._id}`}
               variant="contained"
               endIcon={<ArrowBack />}
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-                fontWeight: 600,
-              }}
             >
               مشاهده جزئیات
             </Button>
