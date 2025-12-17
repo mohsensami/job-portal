@@ -16,6 +16,7 @@ import {
   AttachMoney,
   AccessTime,
   ArrowForward,
+  ArrowBack,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../../utils";
@@ -135,29 +136,25 @@ const JobCard = ({ job }) => {
                 </Stack>
               )}
             </Stack>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html: job.description || "",
-              }}
-            />
+            <Box />
           </Box>
+          <CardActions sx={{ px: 3, pb: 2 }}>
+            <Button
+              component={Link}
+              to={`/job/${job._id}`}
+              variant="contained"
+              endIcon={<ArrowBack />}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              مشاهده جزئیات
+            </Button>
+          </CardActions>
         </Stack>
       </CardContent>
-      <CardActions sx={{ px: 3, pb: 2 }}>
-        <Button
-          component={Link}
-          to={`/job/${job._id}`}
-          variant="contained"
-          endIcon={<ArrowForward />}
-          sx={{
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: 600,
-          }}
-        >
-          مشاهده جزئیات
-        </Button>
-      </CardActions>
     </Card>
   );
 };
