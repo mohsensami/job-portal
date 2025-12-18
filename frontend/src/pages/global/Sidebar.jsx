@@ -13,6 +13,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import CategoryIcon from "@mui/icons-material/Category";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import Person3Icon from "@mui/icons-material/Person3";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import Avatar from "@mui/material/Avatar";
 import logoDashboard from "../../images/hr-project.png";
 import { Link } from "react-router-dom";
@@ -124,6 +125,13 @@ const SidebarAdm = () => {
                   >
                     {" "}
                     دسته‌بندی{" "}
+                  </MenuItem>
+                  <MenuItem
+                    component={<Link to="/admin/applicants" />}
+                    icon={<AssignmentIndIcon />}
+                  >
+                    {" "}
+                    متقاضیان{" "}
                   </MenuItem>
                 </>
               ) : (

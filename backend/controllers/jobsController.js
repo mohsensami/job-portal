@@ -187,3 +187,44 @@ exports.getJobApplicants = async (req, res, next) => {
     next(error);
   }
 };
+
+// لیست همه متقاضیان از همه شغل‌ها (فقط برای ادمین)
+exports.getAllApplicants = async (req, res, next) => {
+  try {
+    // فقط ادمین (role > 1) یا کارفرما (role === 1) می‌تواند این لیست را ببیند
+    if (req.user.role === 0) {
+      return next(
+        new ErrorResponse("کارجویان اجازه مشاهده این لیست را ندارند", 403)
+      );
+    }
+
+    // اگر کارفرما است، فقط متقاضیان آگهی‌های خودش را ببیند
+    let filter = {};
+    if (req.user.role === 1) {
+      // پیدا کردن همه شغل‌های این کارفرما
+      const userJobs = await Job.find({ user: req.user._id }).select("_id");
+      const jobIds = userJobs.map((job) => job._id);
+      filter = { job: { $in: jobIds } };
+    }
+
+    const applicants = await Application.find(filter)
+      .sort({ createdAt: -1 })
+      .populate("applicant", "firstName lastName email")
+      .populate({
+        path: "job",
+        select: "title location salary",
+        populate: {
+          path: "user",
+          select: "firstName lastName email",
+        },
+      });
+
+    res.status(200).json({
+      success: true,
+      applicants,
+      count: applicants.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

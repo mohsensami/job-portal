@@ -7,6 +7,7 @@ const {
   showJobs,
   deleteJob,
   getJobApplicants,
+  getAllApplicants,
 } = require("../controllers/jobsController");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
@@ -31,5 +32,9 @@ router.get(
   isAdmin,
   getJobApplicants
 );
+
+// لیست همه متقاضیان از همه شغل‌ها (فقط ادمین/کارفرما)
+// /api/applicants/all
+router.get("/applicants/all", isAuthenticated, isAdmin, getAllApplicants);
 
 module.exports = router;
