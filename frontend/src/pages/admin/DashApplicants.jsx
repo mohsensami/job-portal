@@ -13,7 +13,7 @@ import {
   Button,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
 import moment from "moment";
@@ -22,10 +22,15 @@ import WorkIcon from "@mui/icons-material/Work";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import PendingIcon from "@mui/icons-material/Pending";
+import { IconButton, Tooltip } from "@mui/material";
 
 const DashApplicants = () => {
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   // Load all applicants
   const {
@@ -40,6 +45,32 @@ const DashApplicants = () => {
       return data;
     },
     refetchOnWindowFocus: false,
+  });
+
+  // Mutation for updating application status
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({ applicationId, status }) => {
+      const { data } = await axiosInstance.put(
+        `/api/application/${applicationId}/status`,
+        { status }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "وضعیت با موفقیت تغییر یافت");
+      // Refetch applicants list
+      queryClient.invalidateQueries({ queryKey: ["allApplicants"] });
+      // Update selected applicant if dialog is open
+      if (selectedApplicant && detailDialogOpen) {
+        const updatedApplicant = data.application;
+        setSelectedApplicant(updatedApplicant);
+      }
+    },
+    onError: (error) => {
+      const errorMessage =
+        error?.response?.data?.error || error.message || "خطا در تغییر وضعیت";
+      toast.error(errorMessage);
+    },
   });
 
   useEffect(() => {
@@ -82,6 +113,10 @@ const DashApplicants = () => {
   const handleCloseDialog = () => {
     setDetailDialogOpen(false);
     setSelectedApplicant(null);
+  };
+
+  const handleStatusChange = (applicationId, newStatus) => {
+    updateStatusMutation.mutate({ applicationId, status: newStatus });
   };
 
   const getStatusColor = (status) => {
@@ -188,16 +223,57 @@ const DashApplicants = () => {
     {
       field: "عملیات",
       headerName: "عملیات",
-      width: 150,
+      width: 400,
       sortable: false,
       renderCell: (params) => (
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => handleViewDetails(params.row)}
-        >
-          مشاهده جزئیات
-        </Button>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => handleViewDetails(params.row)}
+          >
+            جزئیات
+          </Button>
+          <Tooltip title="تایید">
+            <IconButton
+              color="success"
+              size="small"
+              onClick={() => handleStatusChange(params.row._id, "accepted")}
+              disabled={
+                updateStatusMutation.isPending ||
+                params.row.status === "accepted"
+              }
+            >
+              <CheckCircleIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="رد">
+            <IconButton
+              color="error"
+              size="small"
+              onClick={() => handleStatusChange(params.row._id, "rejected")}
+              disabled={
+                updateStatusMutation.isPending ||
+                params.row.status === "rejected"
+              }
+            >
+              <CancelIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="در انتظار">
+            <IconButton
+              color="warning"
+              size="small"
+              onClick={() => handleStatusChange(params.row._id, "pending")}
+              disabled={
+                updateStatusMutation.isPending ||
+                params.row.status === "pending"
+              }
+            >
+              <PendingIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ),
     },
   ];
@@ -331,24 +407,68 @@ const DashApplicants = () => {
                 <Chip
                   label={getStatusLabel(selectedApplicant.status)}
                   color={getStatusColor(selectedApplicant.status)}
-                  sx={{ mb: 1 }}
+                  sx={{ mb: 2 }}
                 />
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  sx={{ mt: 1 }}
+                  sx={{ mt: 1, mb: 2 }}
                 >
                   تاریخ درخواست:{" "}
                   {moment(selectedApplicant.createdAt).format(
                     "YYYY/MM/DD - HH:mm"
                   )}
                 </Typography>
+                <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    startIcon={<CheckCircleIcon />}
+                    onClick={() =>
+                      handleStatusChange(selectedApplicant._id, "accepted")
+                    }
+                    disabled={
+                      updateStatusMutation.isPending ||
+                      selectedApplicant.status === "accepted"
+                    }
+                  >
+                    تایید
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<CancelIcon />}
+                    onClick={() =>
+                      handleStatusChange(selectedApplicant._id, "rejected")
+                    }
+                    disabled={
+                      updateStatusMutation.isPending ||
+                      selectedApplicant.status === "rejected"
+                    }
+                  >
+                    رد
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<PendingIcon />}
+                    onClick={() =>
+                      handleStatusChange(selectedApplicant._id, "pending")
+                    }
+                    disabled={
+                      updateStatusMutation.isPending ||
+                      selectedApplicant.status === "pending"
+                    }
+                  >
+                    در انتظار
+                  </Button>
+                </Box>
               </Box>
             </Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} variant="contained">
+          <Button onClick={handleCloseDialog} variant="outlined">
             بستن
           </Button>
         </DialogActions>
