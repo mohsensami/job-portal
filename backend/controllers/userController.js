@@ -47,12 +47,40 @@ exports.singleUser = async (req, res, next) => {
 //edit user
 exports.editUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+    // فقط کاربر می‌تواند اطلاعات خودش را ویرایش کند
+    if (req.params.id !== req.user._id.toString()) {
+      return next(
+        new ErrorResponse("شما فقط می‌توانید اطلاعات خود را ویرایش کنید", 403)
+      );
+    }
+
+    // فیلدهای قابل ویرایش
+    const allowedFields = ["firstName", "lastName", "email", "phone"];
+    const updateData = {};
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
     });
+
+    // اگر ایمیل تغییر کرده، چک می‌کنیم که تکراری نباشد
+    if (updateData.email) {
+      const existingUser = await User.findOne({ email: updateData.email });
+      if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+        return next(new ErrorResponse("این ایمیل قبلاً استفاده شده است", 400));
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
     res.status(200).json({
       success: true,
       user,
+      message: "اطلاعات با موفقیت به‌روزرسانی شد",
     });
     next();
   } catch (error) {

@@ -71,6 +71,10 @@ const userSchema = new mongoose.Schema(
         "لطفاً یک ایمیل معتبر وارد کنید",
       ],
     },
+    phone: {
+      type: String,
+      trim: true,
+    },
     password: {
       type: String,
       trim: true,
