@@ -142,6 +142,7 @@ const JobCard = ({ job }) => {
               to={`/job/${job._id}`}
               variant="contained"
               endIcon={<ArrowBack />}
+              size="small"
             >
               مشاهده جزئیات
             </Button>
