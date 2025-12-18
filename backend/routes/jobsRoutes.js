@@ -8,6 +8,7 @@ const {
   deleteJob,
   getJobApplicants,
   getAllApplicants,
+  updateApplicationStatus,
 } = require("../controllers/jobsController");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
@@ -36,5 +37,14 @@ router.get(
 // لیست همه متقاضیان از همه شغل‌ها (فقط ادمین/کارفرما)
 // /api/applicants/all
 router.get("/applicants/all", isAuthenticated, isAdmin, getAllApplicants);
+
+// تایید یا رد کردن رزومه متقاضی
+// /api/application/:applicationId/status
+router.put(
+  "/application/:applicationId/status",
+  isAuthenticated,
+  isAdmin,
+  updateApplicationStatus
+);
 
 module.exports = router;

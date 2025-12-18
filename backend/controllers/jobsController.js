@@ -228,3 +228,98 @@ exports.getAllApplicants = async (req, res, next) => {
     next(error);
   }
 };
+
+// تایید یا رد کردن رزومه متقاضی
+exports.updateApplicationStatus = async (req, res, next) => {
+  try {
+    const { applicationId } = req.params;
+    const { status } = req.body;
+
+    // بررسی معتبر بودن status
+    if (!["accepted", "rejected", "pending"].includes(status)) {
+      return next(
+        new ErrorResponse(
+          "وضعیت نامعتبر است. باید یکی از این موارد باشد: accepted, rejected, pending",
+          400
+        )
+      );
+    }
+
+    // پیدا کردن Application
+    const application = await Application.findById(applicationId).populate(
+      "job",
+      "user title"
+    );
+
+    if (!application) {
+      return next(new ErrorResponse("درخواست پیدا نشد", 404));
+    }
+
+    // چک کردن دسترسی: فقط ادمین یا کارفرمای صاحب آگهی می‌تواند وضعیت را تغییر دهد
+    if (req.user.role === 0) {
+      return next(
+        new ErrorResponse("کارجویان اجازه تغییر وضعیت را ندارند", 403)
+      );
+    }
+
+    // اگر کارفرما است (role === 1)، باید صاحب این آگهی باشد
+    if (
+      req.user.role === 1 &&
+      application.job.user.toString() !== req.user._id.toString()
+    ) {
+      return next(
+        new ErrorResponse(
+          "شما فقط می‌توانید وضعیت متقاضیان آگهی‌های خود را تغییر دهید",
+          403
+        )
+      );
+    }
+
+    // آپدیت کردن Application
+    application.status = status;
+    await application.save();
+
+    // آپدیت کردن jobsHistory کاربر (اگر jobId در jobsHistory وجود دارد)
+    const User = require("../models/userModel");
+    const applicant = await User.findById(application.applicant);
+
+    if (applicant && applicant.jobsHistory) {
+      // پیدا کردن آیتم مربوطه در jobsHistory
+      const jobHistoryItem = applicant.jobsHistory.find(
+        (item) =>
+          item.job && item.job.toString() === application.job._id.toString()
+      );
+
+      if (jobHistoryItem) {
+        jobHistoryItem.applicationStatus = status;
+        await applicant.save();
+      }
+    }
+
+    // برگرداندن Application آپدیت شده با populate
+    const updatedApplication = await Application.findById(applicationId)
+      .populate("applicant", "firstName lastName email")
+      .populate({
+        path: "job",
+        select: "title location salary",
+        populate: {
+          path: "user",
+          select: "firstName lastName email",
+        },
+      });
+
+    res.status(200).json({
+      success: true,
+      message: `وضعیت درخواست با موفقیت به "${
+        status === "accepted"
+          ? "تایید شده"
+          : status === "rejected"
+          ? "رد شده"
+          : "در انتظار"
+      }" تغییر یافت`,
+      application: updatedApplication,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
