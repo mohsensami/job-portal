@@ -8,23 +8,28 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Divider,
+  Avatar,
+  Stack,
 } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
 import moment from "moment";
 import PersonIcon from "@mui/icons-material/Person";
-import WorkIcon from "@mui/icons-material/Work";
 import EmailIcon from "@mui/icons-material/Email";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PendingIcon from "@mui/icons-material/Pending";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import BusinessIcon from "@mui/icons-material/Business";
 import { IconButton, Tooltip } from "@mui/material";
 
 const DashApplicants = () => {
@@ -84,29 +89,9 @@ const DashApplicants = () => {
   }, [isError, error]);
 
   const applicants = applicantsData?.applicants || [];
-  const data = applicants.map((app, index) => ({
-    id: app._id || index,
-    _id: app._id,
-    applicantName: app.applicant
-      ? `${app.applicant.firstName} ${app.applicant.lastName}`
-      : "نامشخص",
-    applicantEmail: app.applicant?.email || "نامشخص",
-    applicantId: app.applicant?._id,
-    jobTitle: app.job?.title || "نامشخص",
-    jobLocation: app.job?.location || "نامشخص",
-    jobSalary: app.job?.salary || "نامشخص",
-    jobId: app.job?._id,
-    employerName: app.job?.user
-      ? `${app.job.user.firstName} ${app.job.user.lastName}`
-      : "نامشخص",
-    employerEmail: app.job?.user?.email || "نامشخص",
-    status: app.status || "pending",
-    createdAt: app.createdAt,
-    fullData: app,
-  }));
 
-  const handleViewDetails = (row) => {
-    setSelectedApplicant(row.fullData);
+  const handleViewDetails = (applicant) => {
+    setSelectedApplicant(applicant);
     setDetailDialogOpen(true);
   };
 
@@ -141,182 +126,258 @@ const DashApplicants = () => {
     }
   };
 
-  const columns = [
-    {
-      field: "applicantName",
-      headerName: "نام متقاضی",
-      width: 200,
-      renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <PersonIcon fontSize="small" color="primary" />
-          <Typography variant="body2">{params.value}</Typography>
-        </Box>
-      ),
-    },
-    {
-      field: "applicantEmail",
-      headerName: "ایمیل متقاضی",
-      width: 220,
-      renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <EmailIcon fontSize="small" color="action" />
-          <Typography variant="body2">{params.value}</Typography>
-        </Box>
-      ),
-    },
-    {
-      field: "jobTitle",
-      headerName: "عنوان شغل",
-      width: 250,
-      renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <WorkIcon fontSize="small" color="primary" />
-          <Typography variant="body2">{params.value}</Typography>
-        </Box>
-      ),
-    },
-    {
-      field: "jobLocation",
-      headerName: "موقعیت",
-      width: 150,
-      renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <LocationOnIcon fontSize="small" color="action" />
-          <Typography variant="body2">{params.value}</Typography>
-        </Box>
-      ),
-    },
-    {
-      field: "jobSalary",
-      headerName: "حقوق",
-      width: 120,
-      renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <AttachMoneyIcon fontSize="small" color="success" />
-          <Typography variant="body2">{params.value}</Typography>
-        </Box>
-      ),
-    },
-    {
-      field: "employerName",
-      headerName: "کارفرما",
-      width: 180,
-    },
-    {
-      field: "status",
-      headerName: "وضعیت",
-      width: 130,
-      renderCell: (params) => (
-        <Chip
-          label={getStatusLabel(params.value)}
-          color={getStatusColor(params.value)}
-          size="small"
-        />
-      ),
-    },
-    {
-      field: "createdAt",
-      headerName: "تاریخ درخواست",
-      width: 180,
-      renderCell: (params) => moment(params.value).format("YYYY/MM/DD - HH:mm"),
-    },
-    {
-      field: "عملیات",
-      headerName: "عملیات",
-      width: 400,
-      sortable: false,
-      renderCell: (params) => (
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => handleViewDetails(params.row)}
-          >
-            جزئیات
-          </Button>
-          <Tooltip title="تایید">
-            <IconButton
-              color="success"
-              size="small"
-              onClick={() => handleStatusChange(params.row._id, "accepted")}
-              disabled={
-                updateStatusMutation.isPending ||
-                params.row.status === "accepted"
-              }
-            >
-              <CheckCircleIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="رد">
-            <IconButton
-              color="error"
-              size="small"
-              onClick={() => handleStatusChange(params.row._id, "rejected")}
-              disabled={
-                updateStatusMutation.isPending ||
-                params.row.status === "rejected"
-              }
-            >
-              <CancelIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="در انتظار">
-            <IconButton
-              color="warning"
-              size="small"
-              onClick={() => handleStatusChange(params.row._id, "pending")}
-              disabled={
-                updateStatusMutation.isPending ||
-                params.row.status === "pending"
-              }
-            >
-              <PendingIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      ),
-    },
-  ];
+  // Get total applications count from jobsHistory
+  const getTotalApplications = (applicant) => {
+    return applicant?.jobsHistory?.length || 0;
+  };
+
+  // Get accepted applications count
+  const getAcceptedCount = (applicant) => {
+    if (!applicant?.jobsHistory) return 0;
+    return applicant.jobsHistory.filter(
+      (job) => job.applicationStatus === "accepted"
+    ).length;
+  };
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "400px",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        لیست متقاضیان
+      <Typography variant="h6" sx={{ mb: 3 }}>
+        لیست متقاضیان ({applicants.length} نفر)
       </Typography>
-      <Paper sx={{ bgcolor: "secondary.midNightBlue" }}>
-        <Box sx={{ height: 600, width: "100%" }}>
-          {isLoading ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          ) : (
-            <DataGrid
-              getRowId={(row) => row.id}
-              rows={data}
-              columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[5, 10, 20]}
-              checkboxSelection
-              slots={{ toolbar: GridToolbar }}
-              sx={{
-                "& .MuiDataGrid-cell": {
-                  borderBottom: "1px solid rgba(224, 224, 224, 0.1)",
-                },
-                "& .MuiDataGrid-columnHeaders": {
-                  backgroundColor: "rgba(0, 0, 0, 0.1)",
-                },
-              }}
-            />
-          )}
-        </Box>
-      </Paper>
+
+      {applicants.length === 0 ? (
+        <Paper sx={{ p: 4, textAlign: "center" }}>
+          <Typography variant="body1" color="text.secondary">
+            هیچ متقاضی‌ای یافت نشد
+          </Typography>
+        </Paper>
+      ) : (
+        <Grid container spacing={3}>
+          {applicants.map((application) => {
+            const applicant = application.applicant;
+            const job = application.job;
+            const totalApplications = getTotalApplications(applicant);
+            const acceptedCount = getAcceptedCount(applicant);
+
+            return (
+              <Grid item xs={12} sm={6} md={4} key={application._id}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      boxShadow: 4,
+                    },
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    {/* Header with Avatar and Status */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        mb: 2,
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          bgcolor: "primary.main",
+                          width: 56,
+                          height: 56,
+                          fontSize: "1.5rem",
+                        }}
+                      >
+                        {applicant?.firstName?.[0] || "?"}
+                        {applicant?.lastName?.[0] || ""}
+                      </Avatar>
+                      <Chip
+                        label={getStatusLabel(application.status)}
+                        color={getStatusColor(application.status)}
+                        size="small"
+                      />
+                    </Box>
+
+                    {/* Applicant Name */}
+                    <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                      {applicant?.firstName} {applicant?.lastName}
+                    </Typography>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    {/* Applicant Email */}
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", mb: 1.5 }}
+                    >
+                      <EmailIcon
+                        fontSize="small"
+                        color="action"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body2" color="text.secondary">
+                        {applicant?.email}
+                      </Typography>
+                    </Box>
+
+                    {/* Job Title (minimal info) */}
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", mb: 1.5 }}
+                    >
+                      <BusinessIcon
+                        fontSize="small"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body2" color="text.secondary">
+                        برای: {job?.title || "نامشخص"}
+                      </Typography>
+                    </Box>
+
+                    {/* Member Since */}
+                    {applicant?.createdAt && (
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", mb: 1.5 }}
+                      >
+                        <CalendarTodayIcon
+                          fontSize="small"
+                          color="action"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          عضو از:{" "}
+                          {moment(applicant.createdAt).format("YYYY/MM/DD")}
+                        </Typography>
+                      </Box>
+                    )}
+
+                    {/* Application Stats */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 2,
+                        mt: 2,
+                        pt: 2,
+                        borderTop: "1px solid",
+                        borderColor: "divider",
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          کل درخواست‌ها
+                        </Typography>
+                        <Typography variant="h6" color="primary">
+                          {totalApplications}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          پذیرفته شده
+                        </Typography>
+                        <Typography variant="h6" color="success.main">
+                          {acceptedCount}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Application Date */}
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        تاریخ درخواست:{" "}
+                        {moment(application.createdAt).format(
+                          "YYYY/MM/DD - HH:mm"
+                        )}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+
+                  <Divider />
+
+                  <CardActions
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      px: 2,
+                      py: 1.5,
+                    }}
+                  >
+                    <Button
+                      size="small"
+                      onClick={() => handleViewDetails(application)}
+                    >
+                      جزئیات بیشتر
+                    </Button>
+                    <Box sx={{ display: "flex", gap: 0.5 }}>
+                      <Tooltip title="تایید">
+                        <IconButton
+                          color="success"
+                          size="small"
+                          onClick={() =>
+                            handleStatusChange(application._id, "accepted")
+                          }
+                          disabled={
+                            updateStatusMutation.isPending ||
+                            application.status === "accepted"
+                          }
+                        >
+                          <CheckCircleIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="رد">
+                        <IconButton
+                          color="error"
+                          size="small"
+                          onClick={() =>
+                            handleStatusChange(application._id, "rejected")
+                          }
+                          disabled={
+                            updateStatusMutation.isPending ||
+                            application.status === "rejected"
+                          }
+                        >
+                          <CancelIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="در انتظار">
+                        <IconButton
+                          color="warning"
+                          size="small"
+                          onClick={() =>
+                            handleStatusChange(application._id, "pending")
+                          }
+                          disabled={
+                            updateStatusMutation.isPending ||
+                            application.status === "pending"
+                          }
+                        >
+                          <PendingIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </CardActions>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
 
       {/* Detail Dialog */}
       <Dialog
@@ -329,140 +390,240 @@ const DashApplicants = () => {
         <DialogContent>
           {selectedApplicant && (
             <Box sx={{ mt: 2 }}>
-              <Typography variant="h6" sx={{ mb: 2, color: "primary.main" }}>
-                اطلاعات متقاضی
-              </Typography>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  نام و نام خانوادگی:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.applicant?.firstName}{" "}
-                  {selectedApplicant.applicant?.lastName}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ایمیل:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.applicant?.email}
-                </Typography>
-              </Box>
-
-              <Typography
-                variant="h6"
-                sx={{ mb: 2, mt: 3, color: "primary.main" }}
+              {/* Applicant Info */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  mb: 3,
+                  pb: 2,
+                  borderBottom: "1px solid",
+                  borderColor: "divider",
+                }}
               >
-                اطلاعات شغل
-              </Typography>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  عنوان شغل:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.job?.title || "نامشخص"}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  موقعیت:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.job?.location || "نامشخص"}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  حقوق:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.job?.salary || "نامشخص"}
-                </Typography>
-              </Box>
-
-              <Typography
-                variant="h6"
-                sx={{ mb: 2, mt: 3, color: "primary.main" }}
-              >
-                اطلاعات کارفرما
-              </Typography>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  نام و نام خانوادگی:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.job?.user?.firstName}{" "}
-                  {selectedApplicant.job?.user?.lastName}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ایمیل:
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {selectedApplicant.job?.user?.email}
-                </Typography>
-              </Box>
-
-              <Typography
-                variant="h6"
-                sx={{ mb: 2, mt: 3, color: "primary.main" }}
-              >
-                وضعیت درخواست
-              </Typography>
-              <Box sx={{ mb: 2 }}>
+                <Avatar
+                  sx={{
+                    bgcolor: "primary.main",
+                    width: 64,
+                    height: 64,
+                    fontSize: "1.8rem",
+                  }}
+                >
+                  {selectedApplicant.applicant?.firstName?.[0] || "?"}
+                  {selectedApplicant.applicant?.lastName?.[0] || ""}
+                </Avatar>
+                <Box>
+                  <Typography variant="h6">
+                    {selectedApplicant.applicant?.firstName}{" "}
+                    {selectedApplicant.applicant?.lastName}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedApplicant.applicant?.email}
+                  </Typography>
+                </Box>
                 <Chip
                   label={getStatusLabel(selectedApplicant.status)}
                   color={getStatusColor(selectedApplicant.status)}
-                  sx={{ mb: 2 }}
+                  sx={{ mr: "auto" }}
                 />
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 1, mb: 2 }}
-                >
-                  تاریخ درخواست:{" "}
-                  {moment(selectedApplicant.createdAt).format(
-                    "YYYY/MM/DD - HH:mm"
+              </Box>
+
+              <Grid container spacing={3}>
+                {/* Applicant Statistics */}
+                <Grid item xs={12} md={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 2, color: "primary.main" }}
+                  >
+                    آمار متقاضی
+                  </Typography>
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        تاریخ عضویت
+                      </Typography>
+                      <Typography variant="body1">
+                        {selectedApplicant.applicant?.createdAt
+                          ? moment(
+                              selectedApplicant.applicant.createdAt
+                            ).format("YYYY/MM/DD")
+                          : "نامشخص"}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        تعداد کل درخواست‌ها
+                      </Typography>
+                      <Typography variant="body1">
+                        {getTotalApplications(selectedApplicant.applicant)}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        تعداد درخواست‌های پذیرفته شده
+                      </Typography>
+                      <Typography variant="body1" color="success.main">
+                        {getAcceptedCount(selectedApplicant.applicant)}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Grid>
+
+                {/* Application Info */}
+                <Grid item xs={12} md={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 2, color: "primary.main" }}
+                  >
+                    اطلاعات درخواست
+                  </Typography>
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        عنوان شغل
+                      </Typography>
+                      <Typography variant="body1">
+                        {selectedApplicant.job?.title || "نامشخص"}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        تاریخ درخواست
+                      </Typography>
+                      <Typography variant="body1">
+                        {moment(selectedApplicant.createdAt).format(
+                          "YYYY/MM/DD - HH:mm"
+                        )}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Grid>
+
+                {/* Jobs History */}
+                {selectedApplicant.applicant?.jobsHistory &&
+                  selectedApplicant.applicant.jobsHistory.length > 0 && (
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="h6"
+                        sx={{ mb: 2, color: "primary.main" }}
+                      >
+                        سابقه درخواست‌ها
+                      </Typography>
+                      <Box
+                        sx={{
+                          maxHeight: 200,
+                          overflowY: "auto",
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: 1,
+                          p: 2,
+                        }}
+                      >
+                        <Stack spacing={1}>
+                          {selectedApplicant.applicant.jobsHistory
+                            .slice(0, 5)
+                            .map((job, index) => (
+                              <Box
+                                key={index}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  p: 1,
+                                  bgcolor: "background.default",
+                                  borderRadius: 1,
+                                }}
+                              >
+                                <Box>
+                                  <Typography variant="body2" fontWeight={500}>
+                                    {job.title || "بدون عنوان"}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                  >
+                                    {job.location || "نامشخص"}
+                                  </Typography>
+                                </Box>
+                                <Chip
+                                  label={
+                                    job.applicationStatus === "accepted"
+                                      ? "پذیرفته شده"
+                                      : job.applicationStatus === "rejected"
+                                      ? "رد شده"
+                                      : "در انتظار"
+                                  }
+                                  color={
+                                    job.applicationStatus === "accepted"
+                                      ? "success"
+                                      : job.applicationStatus === "rejected"
+                                      ? "error"
+                                      : "warning"
+                                  }
+                                  size="small"
+                                />
+                              </Box>
+                            ))}
+                        </Stack>
+                      </Box>
+                    </Grid>
                   )}
-                </Typography>
-                <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    startIcon={<CheckCircleIcon />}
-                    onClick={() =>
-                      handleStatusChange(selectedApplicant._id, "accepted")
-                    }
-                    disabled={
-                      updateStatusMutation.isPending ||
-                      selectedApplicant.status === "accepted"
-                    }
-                  >
-                    تایید
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<CancelIcon />}
-                    onClick={() =>
-                      handleStatusChange(selectedApplicant._id, "rejected")
-                    }
-                    disabled={
-                      updateStatusMutation.isPending ||
-                      selectedApplicant.status === "rejected"
-                    }
-                  >
-                    رد
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<PendingIcon />}
-                    onClick={() =>
-                      handleStatusChange(selectedApplicant._id, "pending")
-                    }
-                    disabled={
-                      updateStatusMutation.isPending ||
-                      selectedApplicant.status === "pending"
-                    }
-                  >
-                    در انتظار
-                  </Button>
-                </Box>
+              </Grid>
+
+              {/* Action Buttons */}
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  mt: 3,
+                  pt: 2,
+                  borderTop: "1px solid",
+                  borderColor: "divider",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<CheckCircleIcon />}
+                  onClick={() =>
+                    handleStatusChange(selectedApplicant._id, "accepted")
+                  }
+                  disabled={
+                    updateStatusMutation.isPending ||
+                    selectedApplicant.status === "accepted"
+                  }
+                >
+                  تایید
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<CancelIcon />}
+                  onClick={() =>
+                    handleStatusChange(selectedApplicant._id, "rejected")
+                  }
+                  disabled={
+                    updateStatusMutation.isPending ||
+                    selectedApplicant.status === "rejected"
+                  }
+                >
+                  رد
+                </Button>
+                <Button
+                  variant="contained"
+                  color="warning"
+                  startIcon={<PendingIcon />}
+                  onClick={() =>
+                    handleStatusChange(selectedApplicant._id, "pending")
+                  }
+                  disabled={
+                    updateStatusMutation.isPending ||
+                    selectedApplicant.status === "pending"
+                  }
+                >
+                  در انتظار
+                </Button>
               </Box>
             </Box>
           )}

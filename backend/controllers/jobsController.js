@@ -209,7 +209,7 @@ exports.getAllApplicants = async (req, res, next) => {
 
     const applicants = await Application.find(filter)
       .sort({ createdAt: -1 })
-      .populate("applicant", "firstName lastName email")
+      .populate("applicant", "firstName lastName email createdAt jobsHistory")
       .populate({
         path: "job",
         select: "title location salary",
