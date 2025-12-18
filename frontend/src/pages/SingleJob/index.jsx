@@ -1,12 +1,15 @@
 import { Box, Container, Grid, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Footer from "../../component/Footer";
 import LoadingBox from "../../component/LoadingBox";
 import Navbar from "../../component/Navbar";
 import { jobLoadSingleAction } from "../../../redux/actions/jobAction";
-import { userApplyJobAction } from "../../../redux/actions/userAction";
+import {
+  userApplyJobAction,
+  userProfileAction,
+} from "../../../redux/actions/userAction";
 import JobHeader from "./components/JobHeader";
 import JobDescription from "./components/JobDescription";
 import JobRequirements from "./components/JobRequirements";
@@ -19,19 +22,52 @@ const SingleJob = () => {
   const dispatch = useDispatch();
   const { singleJob, loading } = useSelector((state) => state.singleJob);
   const { userInfo } = useSelector((state) => state.signIn);
+  const { user } = useSelector((state) => state.userProfile);
   const { id } = useParams();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [applied, setApplied] = useState(false);
 
+  // لود تک شغل
   useEffect(() => {
     dispatch(jobLoadSingleAction(id));
   }, [id, dispatch]);
+
+  // اگر کاربر لاگین است ولی پروفایلش (jobsHistory) هنوز لود نشده، آن را لود کن
+  useEffect(() => {
+    if (userInfo && !user) {
+      dispatch(userProfileAction());
+    }
+  }, [dispatch, userInfo, user]);
+
+  // آیا قبلاً برای این شغل رزومه ارسال شده؟
+  const hasApplied = useMemo(() => {
+    if (!singleJob || !user || !user.jobsHistory) return false;
+    return user.jobsHistory.some(
+      (history) =>
+        history.title === singleJob.title &&
+        history.location === singleJob.location &&
+        history.salary === singleJob.salary
+    );
+  }, [singleJob, user]);
+
+  // اگر از قبل رزومه فرستاده شده باشد، state محلی هم ست شود
+  useEffect(() => {
+    if (hasApplied) {
+      setApplied(true);
+    }
+  }, [hasApplied]);
 
   const handleApply = () => {
     if (!userInfo) {
       alert("لطفاً ابتدا وارد حساب کاربری خود شوید");
       return;
     }
+
+    if (hasApplied) {
+      alert("شما قبلاً برای این شغل رزومه ارسال کرده‌اید");
+      return;
+    }
+
     dispatch(
       userApplyJobAction({
         title: singleJob?.title,

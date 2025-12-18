@@ -27,6 +27,8 @@ export const userSignInAction = (user) => async (dispatch) => {
       type: USER_SIGNIN_SUCCESS,
       payload: data,
     });
+    // بعد از لاگین، پروفایل کامل کاربر (شامل jobsHistory) را لود می‌کنیم
+    dispatch(userProfileAction());
     toast.success("ورود با موفقیت انجام شد!");
   } catch (error) {
     const errorMessage =

@@ -40,7 +40,7 @@ const SidebarAdm = () => {
 
   return (
     <>
-      <Sidebar backgroundColor="#003366" style={{ borderRightStyle: "none" }}>
+      <Sidebar backgroundColor="#333" style={{ borderRightStyle: "none" }}>
         <Box
           sx={{
             display: "flex",
@@ -103,6 +103,7 @@ const SidebarAdm = () => {
                     {" "}
                     داشبورد{" "}
                   </MenuItem>
+
                   <MenuItem
                     component={<Link to="/admin/users" />}
                     icon={<GroupAddIcon />}
@@ -139,7 +140,7 @@ const SidebarAdm = () => {
                     icon={<WorkHistoryIcon />}
                   >
                     {" "}
-                    شغل‌های درخواست شده{" "}
+                    درخواست های من
                   </MenuItem>
                   <MenuItem
                     component={<Link to="/user/info" />}

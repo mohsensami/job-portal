@@ -77,15 +77,9 @@ const DashJobs = () => {
 
   const columns = [
     {
-      field: "_id",
-      headerName: "شناسه شغل",
-      width: 150,
-      editable: true,
-    },
-    {
       field: "title",
       headerName: "نام شغل",
-      width: 150,
+      width: 350,
     },
     {
       field: "jobType",
@@ -115,7 +109,7 @@ const DashJobs = () => {
     },
 
     {
-      field: "Actions",
+      field: "عملیات",
       width: 200,
       renderCell: (values) => (
         <Box
@@ -152,9 +146,7 @@ const DashJobs = () => {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ color: "white", pb: 3 }}>
-        فهرست شغل‌ها
-      </Typography>
+      <Typography variant="h6">فهرست شغل‌ها</Typography>
       <Box sx={{ pb: 2, display: "flex", justifyContent: "right" }}>
         <Button variant="contained" color="success" startIcon={<AddIcon />}>
           {" "}

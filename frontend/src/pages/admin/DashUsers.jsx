@@ -24,45 +24,31 @@ const DashUsers = () => {
 
   const columns = [
     {
-      field: "_id",
-      headerName: "شناسه کاربر",
-      width: 150,
-      editable: true,
-    },
-
-    {
       field: "email",
       headerName: "ایمیل",
-      width: 150,
+      width: 250,
     },
 
     {
       field: "role",
       headerName: "وضعیت کاربر",
       width: 150,
-      renderCell: (params) =>
-        params.row.role === 1 ? "مدیر" : "کاربر عادی",
+      renderCell: (params) => (params.row.role === 1 ? "مدیر" : "کاربر عادی"),
     },
 
     {
       field: "createdAt",
       headerName: "تاریخ ایجاد",
-      width: 150,
+      width: 250,
       renderCell: (params) =>
-        moment(params.row.createdAt).format("YYYY-MM-DD HH:MM:SS"),
+        moment(params.row.createdAt).format("YYYY/MM/DD "),
     },
 
     {
-      field: "Actions",
-      width: 200,
+      field: "عملیات",
+      width: 180,
       renderCell: (values) => (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "170px",
-          }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Button variant="contained">
             <Link
               style={{ color: "white", textDecoration: "none" }}
@@ -86,32 +72,16 @@ const DashUsers = () => {
   return (
     <>
       <Box>
-        <Typography variant="h4" sx={{ color: "white", pb: 3 }}>
-          تمام کاربران
-        </Typography>
+        <Typography variant="h6">تمام کاربران</Typography>
         <Box sx={{ pb: 2, display: "flex", justifyContent: "right" }}>
           <Button variant="contained" color="success" startIcon={<AddIcon />}>
             {" "}
             ایجاد کاربر
           </Button>
         </Box>
-        <Paper sx={{ bgcolor: "secondary.midNightBlue" }}>
+        <Paper>
           <Box sx={{ height: 400, width: "100%" }}>
             <DataGrid
-              sx={{
-                "& .MuiTablePagination-displayedRows": {
-                  color: "white",
-                },
-                color: "white",
-                [`& .${gridClasses.row}`]: {
-                  bgcolor: (theme) =>
-                    // theme.palette.mode === 'light' ? grey[200] : grey[900],
-                    theme.palette.secondary.main,
-                },
-                button: {
-                  color: "#ffffff",
-                },
-              }}
               getRowId={(row) => row._id}
               rows={data}
               columns={columns}

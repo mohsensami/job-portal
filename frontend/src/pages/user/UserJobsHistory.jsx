@@ -17,20 +17,12 @@ const UserJobsHistory = () => {
   return (
     <>
       <Box>
-        <Typography variant="h4" sx={{ color: "#fafafa" }}>
-          تاریخچه شغل‌ها
-        </Typography>
+        <Typography variant="h6">تاریخچه شغل‌ها</Typography>
         <Box sx={{ mt: 3 }}>
-          {loading && (
-            <Typography sx={{ color: "#fafafa" }}>
-              در حال بارگذاری...
-            </Typography>
-          )}
+          {loading && <Typography>در حال بارگذاری...</Typography>}
 
           {!loading && jobsHistory.length === 0 && (
-            <Typography sx={{ color: "#fafafa" }}>
-              هنوز برای هیچ شغلی رزومه ارسال نکرده‌اید.
-            </Typography>
+            <Typography>هنوز برای هیچ شغلی رزومه ارسال نکرده‌اید.</Typography>
           )}
 
           {!loading &&
