@@ -30,11 +30,12 @@ const UserJobsHistory = () => {
             jobsHistory.map((history) => (
               <CardElement
                 key={history._id}
-                id={history._id}
+                id={history.job || history._id}
                 jobTitle={history.title}
                 description={history.description || ""}
                 category=""
                 location={history.location}
+                applicationStatus={history.applicationStatus}
               />
             ))}
         </Box>
