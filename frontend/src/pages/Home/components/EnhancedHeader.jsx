@@ -8,7 +8,7 @@ const StyledHeader = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  minHeight: 450,
+  padding: "60px 0",
   backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${headerImage})`,
   backgroundSize: "cover",
   backgroundPosition: "center",
@@ -24,12 +24,11 @@ const EnhancedHeader = () => {
     <StyledHeader>
       <Container maxWidth="md" sx={{ textAlign: "center", zIndex: 1 }}>
         <Typography
-          variant="h2"
+          variant="h4"
           component="h1"
           sx={{
             fontWeight: 700,
             mb: 2,
-            fontSize: { xs: "2rem", md: "3rem" },
           }}
         >
           پیدا کردن شغل رویایی شما
@@ -47,7 +46,7 @@ const EnhancedHeader = () => {
         <Box sx={{ maxWidth: 600, mx: "auto" }}>
           <SearchInputEl />
         </Box>
-        <Stack
+        {/* <Stack
           direction="row"
           spacing={4}
           justifyContent="center"
@@ -77,7 +76,7 @@ const EnhancedHeader = () => {
               کارفرما
             </Typography>
           </Box>
-        </Stack>
+        </Stack> */}
       </Container>
     </StyledHeader>
   );

@@ -1,6 +1,7 @@
 const Job = require("../models/jobModel");
 const JobType = require("../models/jobTypeModel");
 const ErrorResponse = require("../utils/errorResponse");
+const Application = require("../models/applicationModel");
 
 //create job
 exports.createJob = async (req, res, next) => {
@@ -134,6 +135,53 @@ exports.showJobs = async (req, res, next) => {
       pages: Math.ceil(count / pageSize),
       count,
       setUniqueLocation,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// لیست متقاضیان یک شغل برای کارفرما/ادمین
+exports.getJobApplicants = async (req, res, next) => {
+  try {
+    const jobId = req.params.job_id;
+    const job = await Job.findById(jobId);
+
+    if (!job) {
+      return next(new ErrorResponse("شغل پیدا نشد", 404));
+    }
+
+    // فقط ادمین یا صاحب این آگهی (کارفرما) بتواند متقاضیان را ببیند
+    // role === 0: کارجو (دسترسی ندارد)
+    // role === 1: کارفرما (فقط آگهی‌های خودش)
+    // role > 1: ادمین (دسترسی کامل)
+    if (req.user.role === 0) {
+      return next(
+        new ErrorResponse("کارجویان اجازه مشاهده متقاضیان را ندارند", 403)
+      );
+    }
+
+    // اگر کارفرما است (role === 1)، باید صاحب این آگهی باشد
+    if (
+      req.user.role === 1 &&
+      job.user.toString() !== req.user._id.toString()
+    ) {
+      return next(
+        new ErrorResponse(
+          "شما فقط می‌توانید متقاضیان آگهی‌های خود را ببینید",
+          403
+        )
+      );
+    }
+
+    const applicants = await Application.find({ job: jobId })
+      .sort({ createdAt: -1 })
+      .populate("applicant", "firstName lastName email");
+
+    res.status(200).json({
+      success: true,
+      jobId,
+      applicants,
     });
   } catch (error) {
     next(error);

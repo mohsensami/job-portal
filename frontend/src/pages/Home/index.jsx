@@ -77,11 +77,11 @@ const Home = () => {
                   variant="h6"
                   sx={{ fontWeight: 700, color: "#1a1a1a", mb: 1 }}
                 >
-                  موقعیت‌های شغلی
+                  آخرین موقعیت‌های شغلی
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#666" }}>
+                {/* <Typography variant="body2" sx={{ color: "#666" }}>
                   {jobs?.length || 0} موقعیت شغلی یافت شد
-                </Typography>
+                </Typography> */}
               </Box>
 
               {loading ? (

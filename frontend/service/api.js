@@ -20,11 +20,11 @@ axiosInstance.interceptors.request.use(
         if (token) {
           config.headers["Authorization"] = `${token}`;
           // Debug log (remove in production)
-          console.log("Token added to request:", {
-            url: config.url,
-            hasToken: !!token,
-            tokenLength: token?.length,
-          });
+          // console.log("Token added to request:", {
+          //   url: config.url,
+          //   hasToken: !!token,
+          //   tokenLength: token?.length,
+          // });
         } else {
           console.warn("Token not found in userInfo", parsedUserInfo);
         }

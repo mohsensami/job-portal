@@ -44,9 +44,10 @@ const SingleJob = () => {
     if (!singleJob || !user || !user.jobsHistory) return false;
     return user.jobsHistory.some(
       (history) =>
-        history.title === singleJob.title &&
-        history.location === singleJob.location &&
-        history.salary === singleJob.salary
+        history.job?.toString() === singleJob._id?.toString() ||
+        (history.title === singleJob.title &&
+          history.location === singleJob.location &&
+          history.salary === singleJob.salary)
     );
   }, [singleJob, user]);
 
@@ -74,6 +75,7 @@ const SingleJob = () => {
         description: singleJob?.description,
         salary: singleJob?.salary,
         location: singleJob?.location,
+        jobId: singleJob?._id,
       })
     );
     setApplied(true);

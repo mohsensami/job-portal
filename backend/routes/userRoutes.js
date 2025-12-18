@@ -6,6 +6,7 @@ const {
   editUser,
   deleteUser,
   createUserJobsHistory,
+  getStats,
 } = require("../controllers/userController");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
@@ -21,5 +22,7 @@ router.put("/user/edit/:id", isAuthenticated, editUser);
 router.delete("/admin/user/delete/:id", isAuthenticated, isAdmin, deleteUser);
 // /api/user/jobhistory
 router.post("/user/jobhistory", isAuthenticated, createUserJobsHistory);
+// /api/stats (public)
+router.get("/stats", getStats);
 
 module.exports = router;

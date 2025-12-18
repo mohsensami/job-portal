@@ -4,13 +4,25 @@ import {
   Grid,
   Paper,
   Typography,
-  Stack,
   useTheme,
 } from "@mui/material";
 import { Work, LocationOn, TrendingUp, People } from "@mui/icons-material";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "../../../../service/api";
 
 const StatsSection = ({ jobs, setUniqueLocation }) => {
   const theme = useTheme();
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["home-stats"],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get("/api/stats");
+      return data;
+    },
+    staleTime: Infinity,
+  });
+
+  const statsData = data?.stats || {};
 
   const stats = [
     {
@@ -27,17 +39,21 @@ const StatsSection = ({ jobs, setUniqueLocation }) => {
     },
     {
       icon: <TrendingUp sx={{ fontSize: 40 }} />,
-      title: "رشد ماهانه",
-      value: "+15%",
+      title: "کارجویان",
+      value: isLoading ? "..." : statsData.jobseekers || 0,
       color: "#ff9800",
     },
     {
       icon: <People sx={{ fontSize: 40 }} />,
       title: "کارفرمایان",
-      value: "100+",
+      value: isLoading ? "..." : statsData.employers || 0,
       color: "#9c27b0",
     },
   ];
+
+  if (isError) {
+    return null;
+  }
 
   return (
     <Box

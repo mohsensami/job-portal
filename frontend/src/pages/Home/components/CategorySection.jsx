@@ -68,6 +68,7 @@ const CategorySection = () => {
                   p: 3,
                   textAlign: "center",
                   border: "1px solid #e0e0e0",
+                  height: "120px",
                   borderRadius: 2,
                   cursor: "pointer",
                   transition: "all 0.3s ease",

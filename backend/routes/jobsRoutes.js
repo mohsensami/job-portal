@@ -6,6 +6,7 @@ const {
   updateJob,
   showJobs,
   deleteJob,
+  getJobApplicants,
 } = require("../controllers/jobsController");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
@@ -21,5 +22,14 @@ router.put("/job/update/:job_id", isAuthenticated, isAdmin, updateJob);
 router.delete("/job/delete/:job_id", isAuthenticated, isAdmin, deleteJob);
 // /api/jobs/show
 router.get("/jobs/show", showJobs);
+
+// لیست متقاضیان یک شغل (فقط کارفرما/ادمین)
+// /api/job/:job_id/applicants
+router.get(
+  "/job/:job_id/applicants",
+  isAuthenticated,
+  isAdmin,
+  getJobApplicants
+);
 
 module.exports = router;
