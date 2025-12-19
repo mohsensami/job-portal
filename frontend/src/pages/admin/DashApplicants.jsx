@@ -24,6 +24,7 @@ import axiosInstance from "../../../service/api";
 import {
   formatJalaliDateOnly,
   formatJalaliDateTime,
+  convertToJalaliYear,
 } from "../../utils/jalaliDate";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
@@ -33,6 +34,15 @@ import PendingIcon from "@mui/icons-material/Pending";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import BusinessIcon from "@mui/icons-material/Business";
+import PhoneIcon from "@mui/icons-material/Phone";
+import CakeIcon from "@mui/icons-material/Cake";
+import WcIcon from "@mui/icons-material/Wc";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import HomeIcon from "@mui/icons-material/Home";
+import DescriptionIcon from "@mui/icons-material/Description";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { IconButton, Tooltip } from "@mui/material";
 
 const DashApplicants = () => {
@@ -385,6 +395,7 @@ const DashApplicants = () => {
         onClose={handleCloseDialog}
         maxWidth="md"
         fullWidth
+        dir="rtl"
       >
         <DialogTitle>جزئیات متقاضی</DialogTitle>
         <DialogContent>
@@ -565,6 +576,298 @@ const DashApplicants = () => {
                             ))}
                         </Stack>
                       </Box>
+                    </Grid>
+                  )}
+
+                {/* Personal Information */}
+                <Grid item xs={12}>
+                  <Divider sx={{ my: 2 }} />
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 2, color: "primary.main" }}
+                  >
+                    اطلاعات شخصی
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {selectedApplicant.applicant?.phone && (
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <PhoneIcon
+                            sx={{ mr: 1, fontSize: 20 }}
+                            color="action"
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            تلفن همراه
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1">
+                          {selectedApplicant.applicant.phone}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {selectedApplicant.applicant?.birthYear && (
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <CakeIcon
+                            sx={{ mr: 1, fontSize: 20 }}
+                            color="action"
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            سال تولد
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1">
+                          {convertToJalaliYear(
+                            selectedApplicant.applicant.birthYear
+                          ) || "نامشخص"}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {selectedApplicant.applicant?.gender && (
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <WcIcon sx={{ mr: 1, fontSize: 20 }} color="action" />
+                          <Typography variant="body2" color="text.secondary">
+                            جنسیت
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1">
+                          {selectedApplicant.applicant.gender === "male"
+                            ? "مرد"
+                            : selectedApplicant.applicant.gender === "female"
+                            ? "زن"
+                            : "نامشخص"}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {selectedApplicant.applicant?.maritalStatus && (
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <FavoriteIcon
+                            sx={{ mr: 1, fontSize: 20 }}
+                            color="action"
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            وضعیت تاهل
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1">
+                          {selectedApplicant.applicant.maritalStatus ===
+                          "single"
+                            ? "مجرد"
+                            : selectedApplicant.applicant.maritalStatus ===
+                              "married"
+                            ? "متاهل"
+                            : "نامشخص"}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {selectedApplicant.applicant?.militaryServiceStatus && (
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <MilitaryTechIcon
+                            sx={{ mr: 1, fontSize: 20 }}
+                            color="action"
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            وضعیت خدمت سربازی
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1">
+                          {selectedApplicant.applicant.militaryServiceStatus ===
+                          "liable"
+                            ? "مشمول"
+                            : selectedApplicant.applicant
+                                .militaryServiceStatus === "ongoing"
+                            ? "در حال انجام"
+                            : selectedApplicant.applicant
+                                .militaryServiceStatus === "completed"
+                            ? "انجام شده"
+                            : selectedApplicant.applicant
+                                .militaryServiceStatus === "exempt"
+                            ? "معافیت دائم"
+                            : "نامشخص"}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {selectedApplicant.applicant?.province && (
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <LocationOnIcon
+                            sx={{ mr: 1, fontSize: 20 }}
+                            color="action"
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            استان محل سکونت
+                          </Typography>
+                        </Box>
+                        <Typography variant="body1">
+                          {selectedApplicant.applicant.province}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {selectedApplicant.applicant?.address && (
+                      <Grid item xs={12}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <HomeIcon
+                            sx={{ mr: 1, fontSize: 20 }}
+                            color="action"
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            آدرس محل سکونت
+                          </Typography>
+                        </Box>
+                        <Typography
+                          variant="body1"
+                          sx={{ whiteSpace: "pre-wrap" }}
+                        >
+                          {selectedApplicant.applicant.address}
+                        </Typography>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Grid>
+
+                {/* About Me */}
+                {selectedApplicant.applicant?.aboutMe && (
+                  <Grid item xs={12}>
+                    <Divider sx={{ my: 2 }} />
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                      <DescriptionIcon sx={{ mr: 1 }} color="primary" />
+                      <Typography variant="h6" sx={{ color: "primary.main" }}>
+                        درباره من
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        p: 2,
+                        bgcolor: "background.default",
+                        borderRadius: 1,
+                        border: "1px solid",
+                        borderColor: "divider",
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                          lineHeight: 1.8,
+                        }}
+                      >
+                        {selectedApplicant.applicant.aboutMe}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                )}
+
+                {/* Skills */}
+                {selectedApplicant.applicant?.skills &&
+                  selectedApplicant.applicant.skills.length > 0 && (
+                    <Grid item xs={12}>
+                      <Divider sx={{ my: 2 }} />
+                      <Typography
+                        variant="h6"
+                        sx={{ mb: 2, color: "primary.main" }}
+                      >
+                        مهارت‌های حرفه‌ای
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {selectedApplicant.applicant.skills.map(
+                          (skill, index) => (
+                            <Chip
+                              key={index}
+                              label={skill}
+                              color="primary"
+                              variant="outlined"
+                              sx={{ mb: 1 }}
+                            />
+                          )
+                        )}
+                      </Box>
+                    </Grid>
+                  )}
+
+                {/* Work Experience */}
+                {selectedApplicant.applicant?.workExperience &&
+                  selectedApplicant.applicant.workExperience.length > 0 && (
+                    <Grid item xs={12}>
+                      <Divider sx={{ my: 2 }} />
+                      <Typography
+                        variant="h6"
+                        sx={{ mb: 2, color: "primary.main" }}
+                      >
+                        سوابق شغلی
+                      </Typography>
+                      <Stack spacing={2}>
+                        {selectedApplicant.applicant.workExperience.map(
+                          (exp, index) => (
+                            <Box
+                              key={index}
+                              sx={{
+                                p: 2,
+                                bgcolor: "background.default",
+                                borderRadius: 1,
+                                border: "1px solid",
+                                borderColor: "divider",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  mb: 1,
+                                }}
+                              >
+                                <BusinessCenterIcon
+                                  sx={{ mr: 1, color: "primary.main" }}
+                                />
+                                <Typography variant="h6">
+                                  {exp.jobTitle}
+                                </Typography>
+                              </Box>
+                              <Typography
+                                variant="body1"
+                                color="text.secondary"
+                                sx={{ mb: 1 }}
+                              >
+                                {exp.companyName}
+                              </Typography>
+                              <Typography variant="body2">
+                                {exp.startYear
+                                  ? convertToJalaliYear(exp.startYear)
+                                  : "نامشخص"}{" "}
+                                -{" "}
+                                {exp.isCurrent || !exp.endYear
+                                  ? "تا الان"
+                                  : exp.endYear
+                                  ? convertToJalaliYear(exp.endYear)
+                                  : "نامشخص"}
+                              </Typography>
+                            </Box>
+                          )
+                        )}
+                      </Stack>
                     </Grid>
                   )}
               </Grid>
