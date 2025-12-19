@@ -87,6 +87,29 @@ const userSchema = new mongoose.Schema(
       trim: true,
       maxlength: [2000, "متن درباره من نباید بیشتر از 2000 کاراکتر باشد"],
     },
+    maritalStatus: {
+      type: String,
+      enum: ["single", "married"],
+      trim: true,
+    },
+    birthYear: {
+      type: Number,
+      min: [1950, "سال تولد باید معتبر باشد"],
+      max: [
+        new Date().getFullYear(),
+        "سال تولد نمی‌تواند از سال جاری بیشتر باشد",
+      ],
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      trim: true,
+    },
+    militaryServiceStatus: {
+      type: String,
+      enum: ["exempt", "completed", "ongoing", "liable"],
+      trim: true,
+    },
     password: {
       type: String,
       trim: true,

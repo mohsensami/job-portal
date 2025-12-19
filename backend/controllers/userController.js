@@ -62,6 +62,10 @@ exports.editUser = async (req, res, next) => {
       "phone",
       "aboutMe",
       "skills",
+      "maritalStatus",
+      "birthYear",
+      "gender",
+      "militaryServiceStatus",
     ];
     const updateData = {};
 

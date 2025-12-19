@@ -11,6 +11,10 @@ import {
   CircularProgress,
   Alert,
   Chip,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,6 +28,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AddIcon from "@mui/icons-material/Add";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import CakeIcon from "@mui/icons-material/Cake";
+import WcIcon from "@mui/icons-material/Wc";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 
 const UserInfoDashboard = () => {
   const { userInfo } = useSelector((state) => state.signIn);
@@ -38,6 +46,10 @@ const UserInfoDashboard = () => {
     phone: "",
     aboutMe: "",
     skills: [],
+    maritalStatus: "",
+    birthYear: "",
+    gender: "",
+    militaryServiceStatus: "",
   });
   const [skillInput, setSkillInput] = useState("");
   const [errors, setErrors] = useState({});
@@ -71,6 +83,10 @@ const UserInfoDashboard = () => {
         phone: user.phone || "",
         aboutMe: user.aboutMe || "",
         skills: user.skills || [],
+        maritalStatus: user.maritalStatus || "",
+        birthYear: user.birthYear || "",
+        gender: user.gender || "",
+        militaryServiceStatus: user.militaryServiceStatus || "",
       });
       setSkillInput("");
     }
@@ -135,6 +151,10 @@ const UserInfoDashboard = () => {
         phone: user.phone || "",
         aboutMe: user.aboutMe || "",
         skills: user.skills || [],
+        maritalStatus: user.maritalStatus || "",
+        birthYear: user.birthYear || "",
+        gender: user.gender || "",
+        militaryServiceStatus: user.militaryServiceStatus || "",
       });
     }
     setIsEditing(true);
@@ -153,7 +173,12 @@ const UserInfoDashboard = () => {
         phone: user.phone || "",
         aboutMe: user.aboutMe || "",
         skills: user.skills || [],
+        maritalStatus: user.maritalStatus || "",
+        birthYear: user.birthYear || "",
+        gender: user.gender || "",
+        militaryServiceStatus: user.militaryServiceStatus || "",
       });
+      setSkillInput("");
     }
   };
 
@@ -548,6 +573,150 @@ const UserInfoDashboard = () => {
                       </Typography>
                     )}
                   </Box>
+                )}
+              </Grid>
+
+              {/* Marital Status */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <FavoriteIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    وضعیت تاهل
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <FormControl fullWidth>
+                    <Select
+                      name="maritalStatus"
+                      value={formData.maritalStatus}
+                      onChange={handleInputChange}
+                      sx={{
+                        bgcolor: "white",
+                      }}
+                    >
+                      <MenuItem value="">انتخاب کنید</MenuItem>
+                      <MenuItem value="single">مجرد</MenuItem>
+                      <MenuItem value="married">متاهل</MenuItem>
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <Typography variant="h6" sx={{ mt: 1 }}>
+                    {user?.maritalStatus === "single"
+                      ? "مجرد"
+                      : user?.maritalStatus === "married"
+                      ? "متاهل"
+                      : "ثبت نشده"}
+                  </Typography>
+                )}
+              </Grid>
+
+              {/* Birth Year */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <CakeIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    سال تولد
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <TextField
+                    fullWidth
+                    name="birthYear"
+                    type="number"
+                    value={formData.birthYear}
+                    onChange={handleInputChange}
+                    error={!!errors.birthYear}
+                    helperText={errors.birthYear}
+                    variant="outlined"
+                    placeholder="مثلاً: 1375"
+                    inputProps={{
+                      min: 1950,
+                      max: new Date().getFullYear(),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "white",
+                      },
+                    }}
+                  />
+                ) : (
+                  <Typography variant="h6" sx={{ mt: 1 }}>
+                    {user?.birthYear || "ثبت نشده"}
+                  </Typography>
+                )}
+              </Grid>
+
+              {/* Gender */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <WcIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    جنسیت
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <FormControl fullWidth>
+                    <Select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      sx={{
+                        bgcolor: "white",
+                      }}
+                    >
+                      <MenuItem value="">انتخاب کنید</MenuItem>
+                      <MenuItem value="male">مرد</MenuItem>
+                      <MenuItem value="female">زن</MenuItem>
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <Typography variant="h6" sx={{ mt: 1 }}>
+                    {user?.gender === "male"
+                      ? "مرد"
+                      : user?.gender === "female"
+                      ? "زن"
+                      : "ثبت نشده"}
+                  </Typography>
+                )}
+              </Grid>
+
+              {/* Military Service Status */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <MilitaryTechIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    وضعیت خدمت سربازی
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <FormControl fullWidth>
+                    <Select
+                      name="militaryServiceStatus"
+                      value={formData.militaryServiceStatus}
+                      onChange={handleInputChange}
+                      sx={{
+                        bgcolor: "white",
+                      }}
+                    >
+                      <MenuItem value="">انتخاب کنید</MenuItem>
+                      <MenuItem value="liable">مشمول</MenuItem>
+                      <MenuItem value="ongoing">در حال انجام</MenuItem>
+                      <MenuItem value="completed">انجام شده</MenuItem>
+                      <MenuItem value="exempt">معافیت دائم</MenuItem>
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <Typography variant="h6" sx={{ mt: 1 }}>
+                    {user?.militaryServiceStatus === "liable"
+                      ? "مشمول"
+                      : user?.militaryServiceStatus === "ongoing"
+                      ? "در حال انجام"
+                      : user?.militaryServiceStatus === "completed"
+                      ? "انجام شده"
+                      : user?.militaryServiceStatus === "exempt"
+                      ? "معافیت دائم"
+                      : "ثبت نشده"}
+                  </Typography>
                 )}
               </Grid>
             </Grid>
