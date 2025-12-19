@@ -110,6 +110,15 @@ const userSchema = new mongoose.Schema(
       enum: ["exempt", "completed", "ongoing", "liable"],
       trim: true,
     },
+    province: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+      maxlength: [500, "آدرس نباید بیشتر از 500 کاراکتر باشد"],
+    },
     password: {
       type: String,
       trim: true,

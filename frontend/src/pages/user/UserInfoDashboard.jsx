@@ -32,6 +32,43 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CakeIcon from "@mui/icons-material/Cake";
 import WcIcon from "@mui/icons-material/Wc";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import HomeIcon from "@mui/icons-material/Home";
+
+// لیست استان‌های ایران
+const IRAN_PROVINCES = [
+  "آذربایجان شرقی",
+  "آذربایجان غربی",
+  "اردبیل",
+  "اصفهان",
+  "البرز",
+  "ایلام",
+  "بوشهر",
+  "تهران",
+  "چهارمحال و بختیاری",
+  "خراسان جنوبی",
+  "خراسان رضوی",
+  "خراسان شمالی",
+  "خوزستان",
+  "زنجان",
+  "سمنان",
+  "سیستان و بلوچستان",
+  "فارس",
+  "قزوین",
+  "قم",
+  "کردستان",
+  "کرمان",
+  "کرمانشاه",
+  "کهگیلویه و بویراحمد",
+  "گلستان",
+  "گیلان",
+  "لرستان",
+  "مازندران",
+  "مرکزی",
+  "هرمزگان",
+  "همدان",
+  "یزد",
+];
 
 const UserInfoDashboard = () => {
   const { userInfo } = useSelector((state) => state.signIn);
@@ -50,6 +87,8 @@ const UserInfoDashboard = () => {
     birthYear: "",
     gender: "",
     militaryServiceStatus: "",
+    province: "",
+    address: "",
   });
   const [skillInput, setSkillInput] = useState("");
   const [errors, setErrors] = useState({});
@@ -87,6 +126,8 @@ const UserInfoDashboard = () => {
         birthYear: user.birthYear || "",
         gender: user.gender || "",
         militaryServiceStatus: user.militaryServiceStatus || "",
+        province: user.province || "",
+        address: user.address || "",
       });
       setSkillInput("");
     }
@@ -155,6 +196,8 @@ const UserInfoDashboard = () => {
         birthYear: user.birthYear || "",
         gender: user.gender || "",
         militaryServiceStatus: user.militaryServiceStatus || "",
+        province: user.province || "",
+        address: user.address || "",
       });
     }
     setIsEditing(true);
@@ -177,6 +220,8 @@ const UserInfoDashboard = () => {
         birthYear: user.birthYear || "",
         gender: user.gender || "",
         militaryServiceStatus: user.militaryServiceStatus || "",
+        province: user.province || "",
+        address: user.address || "",
       });
       setSkillInput("");
     }
@@ -717,6 +762,100 @@ const UserInfoDashboard = () => {
                       ? "معافیت دائم"
                       : "ثبت نشده"}
                   </Typography>
+                )}
+              </Grid>
+
+              {/* Province */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <LocationOnIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    استان محل سکونت
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <FormControl fullWidth>
+                    <Select
+                      name="province"
+                      value={formData.province}
+                      onChange={handleInputChange}
+                      sx={{
+                        bgcolor: "white",
+                      }}
+                    >
+                      <MenuItem value="">انتخاب کنید</MenuItem>
+                      {IRAN_PROVINCES.map((province) => (
+                        <MenuItem key={province} value={province}>
+                          {province}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <Typography variant="h6" sx={{ mt: 1 }}>
+                    {user?.province || "ثبت نشده"}
+                  </Typography>
+                )}
+              </Grid>
+
+              {/* Address */}
+              <Grid item xs={12}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <HomeIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    آدرس محل سکونت
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <TextField
+                    fullWidth
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    error={!!errors.address}
+                    helperText={
+                      errors.address ||
+                      `${formData.address.length}/500 کاراکتر (اختیاری)`
+                    }
+                    variant="outlined"
+                    multiline
+                    rows={3}
+                    placeholder="آدرس کامل محل سکونت خود را وارد کنید..."
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "white",
+                      },
+                    }}
+                    inputProps={{
+                      maxLength: 500,
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      mt: 1,
+                      p: 2,
+                      bgcolor: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: 1,
+                      minHeight: "60px",
+                    }}
+                  >
+                    {user?.address ? (
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {user.address}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        آدرسی ثبت نشده است.
+                      </Typography>
+                    )}
+                  </Box>
                 )}
               </Grid>
             </Grid>
