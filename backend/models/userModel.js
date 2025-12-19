@@ -75,6 +75,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    skills: [
+      {
+        type: String,
+        trim: true,
+        maxlength: 50,
+      },
+    ],
+    aboutMe: {
+      type: String,
+      trim: true,
+      maxlength: [2000, "متن درباره من نباید بیشتر از 2000 کاراکتر باشد"],
+    },
     password: {
       type: String,
       trim: true,

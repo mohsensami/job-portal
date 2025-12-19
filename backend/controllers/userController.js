@@ -55,7 +55,14 @@ exports.editUser = async (req, res, next) => {
     }
 
     // فیلدهای قابل ویرایش
-    const allowedFields = ["firstName", "lastName", "email", "phone"];
+    const allowedFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "aboutMe",
+      "skills",
+    ];
     const updateData = {};
 
     allowedFields.forEach((field) => {
@@ -67,7 +74,10 @@ exports.editUser = async (req, res, next) => {
     // اگر ایمیل تغییر کرده، چک می‌کنیم که تکراری نباشد
     if (updateData.email) {
       const existingUser = await User.findOne({ email: updateData.email });
-      if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+      if (
+        existingUser &&
+        existingUser._id.toString() !== req.user._id.toString()
+      ) {
         return next(new ErrorResponse("این ایمیل قبلاً استفاده شده است", 400));
       }
     }

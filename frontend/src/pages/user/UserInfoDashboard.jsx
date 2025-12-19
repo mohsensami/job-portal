@@ -10,24 +10,24 @@ import {
   Grid,
   CircularProgress,
   Alert,
+  Chip,
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
-import { userProfileAction } from "../../../redux/actions/userAction";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
+import DescriptionIcon from "@mui/icons-material/Description";
+import AddIcon from "@mui/icons-material/Add";
 
 const UserInfoDashboard = () => {
-  const { user, loading } = useSelector((state) => state.userProfile);
   const { userInfo } = useSelector((state) => state.signIn);
   const { palette } = useTheme();
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -36,10 +36,32 @@ const UserInfoDashboard = () => {
     lastName: "",
     email: "",
     phone: "",
+    aboutMe: "",
+    skills: [],
   });
+  const [skillInput, setSkillInput] = useState("");
   const [errors, setErrors] = useState({});
 
-  // Initialize form data when user data is loaded
+  // Fetch user profile using react-query
+  const {
+    data: userProfileData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get("/api/me");
+      return data;
+    },
+    enabled: !!userInfo, // Only fetch if user is logged in
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    refetchOnWindowFocus: true, // Refetch when window gains focus
+  });
+
+  const user = userProfileData?.user;
+
+  // Initialize form data when user data is loaded or changes
   useEffect(() => {
     if (user) {
       setFormData({
@@ -47,7 +69,10 @@ const UserInfoDashboard = () => {
         lastName: user.lastName || "",
         email: user.email || "",
         phone: user.phone || "",
+        aboutMe: user.aboutMe || "",
+        skills: user.skills || [],
       });
+      setSkillInput("");
     }
   }, [user]);
 
@@ -57,8 +82,9 @@ const UserInfoDashboard = () => {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
+      const userId = userInfo?.info?._id || userInfo?._id;
       const { data: response } = await axiosInstance.put(
-        `/api/user/edit/${userInfo?.info?._id || userInfo?._id}`,
+        `/api/user/edit/${userId}`,
         data
       );
       return response;
@@ -67,8 +93,7 @@ const UserInfoDashboard = () => {
       toast.success(data.message || "اطلاعات با موفقیت به‌روزرسانی شد");
       setIsEditing(false);
       setErrors({});
-      // Refresh user profile
-      dispatch(userProfileAction());
+      // Invalidate and refetch user profile
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },
     onError: (error) => {
@@ -101,6 +126,17 @@ const UserInfoDashboard = () => {
   };
 
   const handleEdit = () => {
+    // Ensure form data is synced with current user data before editing
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        aboutMe: user.aboutMe || "",
+        skills: user.skills || [],
+      });
+    }
     setIsEditing(true);
     setErrors({});
   };
@@ -115,6 +151,8 @@ const UserInfoDashboard = () => {
         lastName: user.lastName || "",
         email: user.email || "",
         phone: user.phone || "",
+        aboutMe: user.aboutMe || "",
+        skills: user.skills || [],
       });
     }
   };
@@ -144,6 +182,38 @@ const UserInfoDashboard = () => {
     updateProfileMutation.mutate(formData);
   };
 
+  // Skills handlers
+  const handleAddSkill = () => {
+    const value = skillInput.trim();
+    if (!value) return;
+    const exists = formData.skills.some(
+      (s) => s.toLowerCase() === value.toLowerCase()
+    );
+    if (exists) {
+      toast.info("این مهارت تکراری است");
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      skills: [...prev.skills, value],
+    }));
+    setSkillInput("");
+  };
+
+  const handleDeleteSkill = (skill) => {
+    setFormData((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((s) => s !== skill),
+    }));
+  };
+
+  const handleSkillKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddSkill();
+    }
+  };
+
   // If user is not a job seeker, show message
   if (!isJobSeeker) {
     return (
@@ -153,7 +223,7 @@ const UserInfoDashboard = () => {
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -164,6 +234,18 @@ const UserInfoDashboard = () => {
         }}
       >
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Box sx={{ maxWidth: "800px", margin: "auto", pt: 4 }}>
+        <Alert severity="error">
+          {error?.response?.data?.error ||
+            error.message ||
+            "خطا در بارگذاری اطلاعات"}
+        </Alert>
       </Box>
     );
   }
@@ -321,6 +403,151 @@ const UserInfoDashboard = () => {
                   <Typography variant="h6" sx={{ mt: 1 }}>
                     {user?.phone || "ثبت نشده"}
                   </Typography>
+                )}
+              </Grid>
+
+              {/* About Me */}
+              <Grid item xs={12}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <DescriptionIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    درباره من
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <TextField
+                    fullWidth
+                    name="aboutMe"
+                    value={formData.aboutMe}
+                    onChange={handleInputChange}
+                    error={!!errors.aboutMe}
+                    helperText={
+                      errors.aboutMe ||
+                      `${formData.aboutMe.length}/2000 کاراکتر`
+                    }
+                    variant="outlined"
+                    multiline
+                    rows={6}
+                    placeholder="در مورد خودتان، مهارت‌ها، تجربیات و اهداف شغلی خود بنویسید..."
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "white",
+                      },
+                    }}
+                    inputProps={{
+                      maxLength: 2000,
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      mt: 1,
+                      p: 2,
+                      bgcolor: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: 1,
+                      minHeight: "100px",
+                    }}
+                  >
+                    {user?.aboutMe ? (
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {user.aboutMe}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        هنوز متنی وارد نشده است. روی دکمه ویرایش کلیک کنید تا
+                        اطلاعات خود را تکمیل کنید.
+                      </Typography>
+                    )}
+                  </Box>
+                )}
+              </Grid>
+
+              {/* Skills */}
+              <Grid item xs={12}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <AddIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    مهارت‌های حرفه‌ای
+                  </Typography>
+                </Box>
+                {isEditing ? (
+                  <>
+                    <Box
+                      sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 1 }}
+                    >
+                      {formData.skills.length > 0 ? (
+                        formData.skills.map((skill) => (
+                          <Chip
+                            key={skill}
+                            label={skill}
+                            onDelete={() => handleDeleteSkill(skill)}
+                            color="primary"
+                            variant="outlined"
+                          />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          هنوز مهارتی اضافه نکرده‌اید.
+                        </Typography>
+                      )}
+                    </Box>
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                      <TextField
+                        fullWidth
+                        name="skillInput"
+                        value={skillInput}
+                        onChange={(e) => setSkillInput(e.target.value)}
+                        onKeyDown={handleSkillKeyDown}
+                        placeholder="مثلاً: JavaScript, PHP, WordPress"
+                        variant="outlined"
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            bgcolor: "white",
+                          },
+                        }}
+                        inputProps={{ maxLength: 50 }}
+                      />
+                      <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        onClick={handleAddSkill}
+                        disabled={updateProfileMutation.isPending}
+                      >
+                        افزودن
+                      </Button>
+                    </Box>
+                  </>
+                ) : (
+                  <Box
+                    sx={{
+                      mt: 1,
+                      display: "flex",
+                      gap: 1,
+                      flexWrap: "wrap",
+                      minHeight: "40px",
+                    }}
+                  >
+                    {user?.skills && user.skills.length > 0 ? (
+                      user.skills.map((skill) => (
+                        <Chip
+                          key={skill}
+                          label={skill}
+                          color="primary"
+                          variant="outlined"
+                        />
+                      ))
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        مهارتی ثبت نشده است.
+                      </Typography>
+                    )}
+                  </Box>
                 )}
               </Grid>
             </Grid>
