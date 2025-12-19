@@ -4,7 +4,7 @@ import { DataGrid, gridClasses, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+import { formatJalaliDateOnly } from "../../utils/jalaliDate";
 import { allUserAction } from "../../../redux/actions/userAction";
 
 const DashUsers = () => {
@@ -40,8 +40,7 @@ const DashUsers = () => {
       field: "createdAt",
       headerName: "تاریخ ایجاد",
       width: 250,
-      renderCell: (params) =>
-        moment(params.row.createdAt).format("YYYY/MM/DD "),
+      renderCell: (params) => formatJalaliDateOnly(params.row.createdAt),
     },
 
     {

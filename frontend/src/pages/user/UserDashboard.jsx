@@ -4,7 +4,7 @@ import StatComponent from "../../component/StatComponent";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import WorkIcon from "@mui/icons-material/Work";
 import { useSelector } from "react-redux";
-import moment from "moment";
+import { formatJalaliDateOnly } from "../../utils/jalaliDate";
 
 const UserDashboard = () => {
   const { user } = useSelector((state) => state.userProfile);
@@ -19,7 +19,7 @@ const UserDashboard = () => {
           spacing={{ xs: 1, sm: 2, md: 4 }}
         >
           <StatComponent
-            value={user && moment(user.createdAt).format("YYYY / MM / DD")}
+            value={user && formatJalaliDateOnly(user.createdAt)}
             icon={<CalendarMonthIcon sx={{ color: "#fafafa", fontSize: 30 }} />}
             description="عضو از"
             money=""

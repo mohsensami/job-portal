@@ -21,27 +21,10 @@ import {
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../../utils";
+import { formatRelativeJalaliDate } from "../../../utils/jalaliDate";
 
 const JobCard = ({ job }) => {
   const theme = useTheme();
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    try {
-      const date = new Date(dateString);
-      const now = new Date();
-      const diffTime = Math.abs(now - date);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays === 0) return "امروز";
-      if (diffDays === 1) return "دیروز";
-      if (diffDays < 7) return `${diffDays} روز پیش`;
-      if (diffDays < 30) return `${Math.floor(diffDays / 7)} هفته پیش`;
-      return `${Math.floor(diffDays / 30)} ماه پیش`;
-    } catch (error) {
-      return "";
-    }
-  };
 
   return (
     <Card
@@ -129,7 +112,7 @@ const JobCard = ({ job }) => {
                 <Stack direction="row" spacing={0.5} alignItems="center">
                   <AccessTime sx={{ color: "#666", fontSize: 18 }} />
                   <Typography variant="body2" sx={{ color: "#666" }}>
-                    {formatDate(job.createdAt)}
+                    {formatRelativeJalaliDate(job.createdAt)}
                   </Typography>
                 </Stack>
               )}

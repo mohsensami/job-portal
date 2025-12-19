@@ -20,6 +20,12 @@ import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
+import {
+  formatJalaliDateOnly,
+  convertToJalaliYear,
+  convertFromJalaliYear,
+  getJalaliYears,
+} from "../../utils/jalaliDate";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PersonIcon from "@mui/icons-material/Person";
@@ -127,6 +133,22 @@ const UserInfoDashboard = () => {
   // Initialize form data when user data is loaded or changes
   useEffect(() => {
     if (user) {
+      // تبدیل سال تولد میلادی به شمسی برای نمایش
+      const jalaliBirthYear = user.birthYear
+        ? convertToJalaliYear(user.birthYear)
+        : "";
+
+      // تبدیل سال‌های سوابق شغلی به شمسی
+      const jalaliWorkExperience = user.workExperience
+        ? user.workExperience.map((exp) => ({
+            ...exp,
+            startYear: exp.startYear
+              ? convertToJalaliYear(exp.startYear)
+              : null,
+            endYear: exp.endYear ? convertToJalaliYear(exp.endYear) : null,
+          }))
+        : [];
+
       setFormData({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
@@ -135,12 +157,12 @@ const UserInfoDashboard = () => {
         aboutMe: user.aboutMe || "",
         skills: user.skills || [],
         maritalStatus: user.maritalStatus || "",
-        birthYear: user.birthYear || "",
+        birthYear: jalaliBirthYear || "",
         gender: user.gender || "",
         militaryServiceStatus: user.militaryServiceStatus || "",
         province: user.province || "",
         address: user.address || "",
-        workExperience: user.workExperience || [],
+        workExperience: jalaliWorkExperience,
       });
       setSkillInput("");
       setNewWorkExp({
@@ -206,6 +228,22 @@ const UserInfoDashboard = () => {
   const handleEdit = () => {
     // Ensure form data is synced with current user data before editing
     if (user) {
+      // تبدیل سال تولد میلادی به شمسی
+      const jalaliBirthYear = user.birthYear
+        ? convertToJalaliYear(user.birthYear)
+        : "";
+
+      // تبدیل سال‌های سوابق شغلی به شمسی
+      const jalaliWorkExperience = user.workExperience
+        ? user.workExperience.map((exp) => ({
+            ...exp,
+            startYear: exp.startYear
+              ? convertToJalaliYear(exp.startYear)
+              : null,
+            endYear: exp.endYear ? convertToJalaliYear(exp.endYear) : null,
+          }))
+        : [];
+
       setFormData({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
@@ -214,12 +252,12 @@ const UserInfoDashboard = () => {
         aboutMe: user.aboutMe || "",
         skills: user.skills || [],
         maritalStatus: user.maritalStatus || "",
-        birthYear: user.birthYear || "",
+        birthYear: jalaliBirthYear || "",
         gender: user.gender || "",
         militaryServiceStatus: user.militaryServiceStatus || "",
         province: user.province || "",
         address: user.address || "",
-        workExperience: user.workExperience || [],
+        workExperience: jalaliWorkExperience,
       });
     }
     setIsEditing(true);
@@ -231,6 +269,22 @@ const UserInfoDashboard = () => {
     setErrors({});
     // Reset form data to original user data
     if (user) {
+      // تبدیل سال تولد میلادی به شمسی
+      const jalaliBirthYear = user.birthYear
+        ? convertToJalaliYear(user.birthYear)
+        : "";
+
+      // تبدیل سال‌های سوابق شغلی به شمسی
+      const jalaliWorkExperience = user.workExperience
+        ? user.workExperience.map((exp) => ({
+            ...exp,
+            startYear: exp.startYear
+              ? convertToJalaliYear(exp.startYear)
+              : null,
+            endYear: exp.endYear ? convertToJalaliYear(exp.endYear) : null,
+          }))
+        : [];
+
       setFormData({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
@@ -239,12 +293,12 @@ const UserInfoDashboard = () => {
         aboutMe: user.aboutMe || "",
         skills: user.skills || [],
         maritalStatus: user.maritalStatus || "",
-        birthYear: user.birthYear || "",
+        birthYear: jalaliBirthYear || "",
         gender: user.gender || "",
         militaryServiceStatus: user.militaryServiceStatus || "",
         province: user.province || "",
         address: user.address || "",
-        workExperience: user.workExperience || [],
+        workExperience: jalaliWorkExperience,
       });
       setSkillInput("");
       setNewWorkExp({
@@ -277,15 +331,21 @@ const UserInfoDashboard = () => {
       return;
     }
 
+    // تبدیل سال‌های شمسی به میلادی برای ذخیره در بک‌اند
+    const startYearMiladi = convertFromJalaliYear(
+      parseInt(newWorkExp.startYear)
+    );
+    const endYearMiladi = newWorkExp.isCurrent
+      ? null
+      : newWorkExp.endYear
+      ? convertFromJalaliYear(parseInt(newWorkExp.endYear))
+      : null;
+
     const workExpToAdd = {
       companyName: newWorkExp.companyName.trim(),
       jobTitle: newWorkExp.jobTitle.trim(),
-      startYear: parseInt(newWorkExp.startYear),
-      endYear: newWorkExp.isCurrent
-        ? null
-        : newWorkExp.endYear
-        ? parseInt(newWorkExp.endYear)
-        : null,
+      startYear: startYearMiladi,
+      endYear: endYearMiladi,
       isCurrent: newWorkExp.isCurrent,
     };
 
@@ -308,7 +368,7 @@ const UserInfoDashboard = () => {
     setNewWorkExp({
       companyName: workExp.companyName,
       jobTitle: workExp.jobTitle,
-      startYear: workExp.startYear.toString(),
+      startYear: workExp.startYear ? workExp.startYear.toString() : "",
       endYear: workExp.endYear ? workExp.endYear.toString() : "",
       isCurrent: workExp.isCurrent || !workExp.endYear,
     });
@@ -333,15 +393,21 @@ const UserInfoDashboard = () => {
       return;
     }
 
+    // تبدیل سال‌های شمسی به میلادی برای ذخیره در بک‌اند
+    const startYearMiladi = convertFromJalaliYear(
+      parseInt(newWorkExp.startYear)
+    );
+    const endYearMiladi = newWorkExp.isCurrent
+      ? null
+      : newWorkExp.endYear
+      ? convertFromJalaliYear(parseInt(newWorkExp.endYear))
+      : null;
+
     const updatedWorkExp = {
       companyName: newWorkExp.companyName.trim(),
       jobTitle: newWorkExp.jobTitle.trim(),
-      startYear: parseInt(newWorkExp.startYear),
-      endYear: newWorkExp.isCurrent
-        ? null
-        : newWorkExp.endYear
-        ? parseInt(newWorkExp.endYear)
-        : null,
+      startYear: startYearMiladi,
+      endYear: endYearMiladi,
       isCurrent: newWorkExp.isCurrent,
     };
 
@@ -404,7 +470,26 @@ const UserInfoDashboard = () => {
       return;
     }
 
-    updateProfileMutation.mutate(formData);
+    // تبدیل سال تولد شمسی به میلادی
+    const birthYearMiladi = formData.birthYear
+      ? convertFromJalaliYear(parseInt(formData.birthYear))
+      : null;
+
+    // تبدیل سال‌های سوابق شغلی از شمسی به میلادی
+    const workExperienceMiladi = formData.workExperience.map((exp) => ({
+      ...exp,
+      startYear: exp.startYear ? convertFromJalaliYear(exp.startYear) : null,
+      endYear: exp.endYear ? convertFromJalaliYear(exp.endYear) : null,
+    }));
+
+    // آماده کردن داده برای ارسال به بک‌اند
+    const dataToSubmit = {
+      ...formData,
+      birthYear: birthYearMiladi,
+      workExperience: workExperienceMiladi,
+    };
+
+    updateProfileMutation.mutate(dataToSubmit);
   };
 
   // Skills handlers
@@ -830,8 +915,8 @@ const UserInfoDashboard = () => {
                     variant="outlined"
                     placeholder="مثلاً: 1375"
                     inputProps={{
-                      min: 1950,
-                      max: new Date().getFullYear(),
+                      min: 1350,
+                      max: getJalaliYears()[0], // سال جاری شمسی
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
@@ -841,7 +926,9 @@ const UserInfoDashboard = () => {
                   />
                 ) : (
                   <Typography variant="h6" sx={{ mt: 1 }}>
-                    {user?.birthYear || "ثبت نشده"}
+                    {user?.birthYear
+                      ? convertToJalaliYear(user.birthYear) || "ثبت نشده"
+                      : "ثبت نشده"}
                   </Typography>
                 )}
               </Grid>
@@ -1158,8 +1245,8 @@ const UserInfoDashboard = () => {
                             }
                             variant="outlined"
                             inputProps={{
-                              min: 1950,
-                              max: new Date().getFullYear(),
+                              min: 1350,
+                              max: getJalaliYears()[0], // سال جاری شمسی
                             }}
                             sx={{
                               "& .MuiOutlinedInput-root": {
@@ -1183,8 +1270,8 @@ const UserInfoDashboard = () => {
                             disabled={newWorkExp.isCurrent}
                             variant="outlined"
                             inputProps={{
-                              min: 1950,
-                              max: new Date().getFullYear() + 1,
+                              min: 1350,
+                              max: getJalaliYears()[0] + 1, // سال جاری شمسی + 1
                             }}
                             sx={{
                               "& .MuiOutlinedInput-root": {

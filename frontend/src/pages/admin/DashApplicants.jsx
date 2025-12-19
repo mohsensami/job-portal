@@ -21,7 +21,10 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
-import moment from "moment";
+import {
+  formatJalaliDateOnly,
+  formatJalaliDateTime,
+} from "../../utils/jalaliDate";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -262,8 +265,7 @@ const DashApplicants = () => {
                           sx={{ mr: 1 }}
                         />
                         <Typography variant="body2" color="text.secondary">
-                          عضو از:{" "}
-                          {moment(applicant.createdAt).format("YYYY/MM/DD")}
+                          عضو از: {formatJalaliDateOnly(applicant.createdAt)}
                         </Typography>
                       </Box>
                     )}
@@ -301,9 +303,7 @@ const DashApplicants = () => {
                     <Box sx={{ mt: 2 }}>
                       <Typography variant="caption" color="text.secondary">
                         تاریخ درخواست:{" "}
-                        {moment(application.createdAt).format(
-                          "YYYY/MM/DD - HH:mm"
-                        )}
+                        {formatJalaliDateTime(application.createdAt)}
                       </Typography>
                     </Box>
                   </CardContent>
@@ -445,9 +445,9 @@ const DashApplicants = () => {
                       </Typography>
                       <Typography variant="body1">
                         {selectedApplicant.applicant?.createdAt
-                          ? moment(
+                          ? formatJalaliDateOnly(
                               selectedApplicant.applicant.createdAt
-                            ).format("YYYY/MM/DD")
+                            )
                           : "نامشخص"}
                       </Typography>
                     </Box>
@@ -492,9 +492,7 @@ const DashApplicants = () => {
                         تاریخ درخواست
                       </Typography>
                       <Typography variant="body1">
-                        {moment(selectedApplicant.createdAt).format(
-                          "YYYY/MM/DD - HH:mm"
-                        )}
+                        {formatJalaliDateTime(selectedApplicant.createdAt)}
                       </Typography>
                     </Box>
                   </Stack>
