@@ -68,6 +68,7 @@ exports.editUser = async (req, res, next) => {
       "militaryServiceStatus",
       "province",
       "address",
+      "workExperience",
     ];
     const updateData = {};
 

@@ -47,6 +47,55 @@ const jobsHistorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const workExperienceSchema = new mongoose.Schema(
+  {
+    companyName: {
+      type: String,
+      trim: true,
+      required: [true, "نام شرکت الزامی است"],
+      maxlength: [100, "نام شرکت نباید بیشتر از 100 کاراکتر باشد"],
+    },
+    jobTitle: {
+      type: String,
+      trim: true,
+      required: [true, "عنوان شغلی الزامی است"],
+      maxlength: [100, "عنوان شغلی نباید بیشتر از 100 کاراکتر باشد"],
+    },
+    startYear: {
+      type: Number,
+      required: [true, "سال شروع الزامی است"],
+      min: [1950, "سال شروع باید معتبر باشد"],
+      max: [
+        new Date().getFullYear(),
+        "سال شروع نمی‌تواند از سال جاری بیشتر باشد",
+      ],
+    },
+    endYear: {
+      type: Number,
+      min: [1950, "سال پایان باید معتبر باشد"],
+      max: [
+        new Date().getFullYear() + 1,
+        "سال پایان نمی‌تواند از سال جاری بیشتر باشد",
+      ],
+      validate: {
+        validator: function (value) {
+          // اگر endYear وجود دارد، باید از startYear بزرگتر یا مساوی باشد
+          if (value && this.startYear) {
+            return value >= this.startYear;
+          }
+          return true;
+        },
+        message: "سال پایان باید از سال شروع بزرگتر یا مساوی باشد",
+      },
+    },
+    isCurrent: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -127,6 +176,7 @@ const userSchema = new mongoose.Schema(
     },
 
     jobsHistory: [jobsHistorySchema],
+    workExperience: [workExperienceSchema],
 
     role: {
       type: Number,

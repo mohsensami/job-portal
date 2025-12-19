@@ -20,7 +20,6 @@ import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import axiosInstance from "../../../service/api";
-import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PersonIcon from "@mui/icons-material/Person";
@@ -34,6 +33,10 @@ import WcIcon from "@mui/icons-material/Wc";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import HomeIcon from "@mui/icons-material/Home";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 // لیست استان‌های ایران
 const IRAN_PROVINCES = [
@@ -89,9 +92,18 @@ const UserInfoDashboard = () => {
     militaryServiceStatus: "",
     province: "",
     address: "",
+    workExperience: [],
   });
   const [skillInput, setSkillInput] = useState("");
   const [errors, setErrors] = useState({});
+  const [editingWorkExpIndex, setEditingWorkExpIndex] = useState(null);
+  const [newWorkExp, setNewWorkExp] = useState({
+    companyName: "",
+    jobTitle: "",
+    startYear: "",
+    endYear: "",
+    isCurrent: false,
+  });
 
   // Fetch user profile using react-query
   const {
@@ -128,8 +140,17 @@ const UserInfoDashboard = () => {
         militaryServiceStatus: user.militaryServiceStatus || "",
         province: user.province || "",
         address: user.address || "",
+        workExperience: user.workExperience || [],
       });
       setSkillInput("");
+      setNewWorkExp({
+        companyName: "",
+        jobTitle: "",
+        startYear: "",
+        endYear: "",
+        isCurrent: false,
+      });
+      setEditingWorkExpIndex(null);
     }
   }, [user]);
 
@@ -198,6 +219,7 @@ const UserInfoDashboard = () => {
         militaryServiceStatus: user.militaryServiceStatus || "",
         province: user.province || "",
         address: user.address || "",
+        workExperience: user.workExperience || [],
       });
     }
     setIsEditing(true);
@@ -222,9 +244,142 @@ const UserInfoDashboard = () => {
         militaryServiceStatus: user.militaryServiceStatus || "",
         province: user.province || "",
         address: user.address || "",
+        workExperience: user.workExperience || [],
       });
       setSkillInput("");
+      setNewWorkExp({
+        companyName: "",
+        jobTitle: "",
+        startYear: "",
+        endYear: "",
+        isCurrent: false,
+      });
+      setEditingWorkExpIndex(null);
     }
+  };
+
+  // Work Experience handlers
+  const handleAddWorkExp = () => {
+    if (
+      !newWorkExp.companyName.trim() ||
+      !newWorkExp.jobTitle.trim() ||
+      !newWorkExp.startYear
+    ) {
+      toast.error("لطفاً نام شرکت، عنوان شغلی و سال شروع را وارد کنید");
+      return;
+    }
+
+    if (
+      newWorkExp.endYear &&
+      parseInt(newWorkExp.endYear) < parseInt(newWorkExp.startYear)
+    ) {
+      toast.error("سال پایان باید از سال شروع بزرگتر یا مساوی باشد");
+      return;
+    }
+
+    const workExpToAdd = {
+      companyName: newWorkExp.companyName.trim(),
+      jobTitle: newWorkExp.jobTitle.trim(),
+      startYear: parseInt(newWorkExp.startYear),
+      endYear: newWorkExp.isCurrent
+        ? null
+        : newWorkExp.endYear
+        ? parseInt(newWorkExp.endYear)
+        : null,
+      isCurrent: newWorkExp.isCurrent,
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      workExperience: [...prev.workExperience, workExpToAdd],
+    }));
+
+    setNewWorkExp({
+      companyName: "",
+      jobTitle: "",
+      startYear: "",
+      endYear: "",
+      isCurrent: false,
+    });
+  };
+
+  const handleEditWorkExp = (index) => {
+    const workExp = formData.workExperience[index];
+    setNewWorkExp({
+      companyName: workExp.companyName,
+      jobTitle: workExp.jobTitle,
+      startYear: workExp.startYear.toString(),
+      endYear: workExp.endYear ? workExp.endYear.toString() : "",
+      isCurrent: workExp.isCurrent || !workExp.endYear,
+    });
+    setEditingWorkExpIndex(index);
+  };
+
+  const handleUpdateWorkExp = () => {
+    if (
+      !newWorkExp.companyName.trim() ||
+      !newWorkExp.jobTitle.trim() ||
+      !newWorkExp.startYear
+    ) {
+      toast.error("لطفاً نام شرکت، عنوان شغلی و سال شروع را وارد کنید");
+      return;
+    }
+
+    if (
+      newWorkExp.endYear &&
+      parseInt(newWorkExp.endYear) < parseInt(newWorkExp.startYear)
+    ) {
+      toast.error("سال پایان باید از سال شروع بزرگتر یا مساوی باشد");
+      return;
+    }
+
+    const updatedWorkExp = {
+      companyName: newWorkExp.companyName.trim(),
+      jobTitle: newWorkExp.jobTitle.trim(),
+      startYear: parseInt(newWorkExp.startYear),
+      endYear: newWorkExp.isCurrent
+        ? null
+        : newWorkExp.endYear
+        ? parseInt(newWorkExp.endYear)
+        : null,
+      isCurrent: newWorkExp.isCurrent,
+    };
+
+    const updated = [...formData.workExperience];
+    updated[editingWorkExpIndex] = updatedWorkExp;
+
+    setFormData((prev) => ({
+      ...prev,
+      workExperience: updated,
+    }));
+
+    setNewWorkExp({
+      companyName: "",
+      jobTitle: "",
+      startYear: "",
+      endYear: "",
+      isCurrent: false,
+    });
+    setEditingWorkExpIndex(null);
+  };
+
+  const handleDeleteWorkExp = (index) => {
+    const updated = formData.workExperience.filter((_, i) => i !== index);
+    setFormData((prev) => ({
+      ...prev,
+      workExperience: updated,
+    }));
+  };
+
+  const handleCancelWorkExp = () => {
+    setNewWorkExp({
+      companyName: "",
+      jobTitle: "",
+      startYear: "",
+      endYear: "",
+      isCurrent: false,
+    });
+    setEditingWorkExpIndex(null);
   };
 
   const handleSubmit = (e) => {
@@ -853,6 +1008,302 @@ const UserInfoDashboard = () => {
                     ) : (
                       <Typography variant="body2" color="text.secondary">
                         آدرسی ثبت نشده است.
+                      </Typography>
+                    )}
+                  </Box>
+                )}
+              </Grid>
+
+              {/* Work Experience */}
+              <Grid item xs={12}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                  <WorkHistoryIcon sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    سوابق شغلی
+                  </Typography>
+                </Box>
+
+                {isEditing ? (
+                  <Box>
+                    {/* List of existing work experiences */}
+                    {formData.workExperience.length > 0 && (
+                      <Box sx={{ mb: 3 }}>
+                        {formData.workExperience.map((exp, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              p: 2,
+                              mb: 2,
+                              bgcolor: "rgba(255, 255, 255, 0.1)",
+                              borderRadius: 1,
+                              border: "1px solid rgba(255, 255, 255, 0.2)",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                              }}
+                            >
+                              <Box sx={{ flex: 1 }}>
+                                <Typography variant="h6" sx={{ mb: 0.5 }}>
+                                  {exp.jobTitle}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{ mb: 1 }}
+                                >
+                                  {exp.companyName}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {exp.startYear} -{" "}
+                                  {exp.isCurrent || !exp.endYear
+                                    ? "تا الان"
+                                    : exp.endYear}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: "flex", gap: 1 }}>
+                                <Button
+                                  size="small"
+                                  startIcon={<EditIcon />}
+                                  onClick={() => handleEditWorkExp(index)}
+                                  disabled={editingWorkExpIndex === index}
+                                >
+                                  ویرایش
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  startIcon={<DeleteIcon />}
+                                  onClick={() => handleDeleteWorkExp(index)}
+                                >
+                                  حذف
+                                </Button>
+                              </Box>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
+
+                    {/* Add/Edit Form */}
+                    <Box
+                      sx={{
+                        p: 2,
+                        bgcolor: "rgba(255, 255, 255, 0.05)",
+                        borderRadius: 1,
+                        border: "1px dashed rgba(255, 255, 255, 0.3)",
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ mb: 2, fontWeight: 500 }}
+                      >
+                        {editingWorkExpIndex !== null
+                          ? "ویرایش سابقه شغلی"
+                          : "افزودن سابقه شغلی جدید"}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                          <TextField
+                            fullWidth
+                            label="نام شرکت"
+                            value={newWorkExp.companyName}
+                            onChange={(e) =>
+                              setNewWorkExp({
+                                ...newWorkExp,
+                                companyName: e.target.value,
+                              })
+                            }
+                            variant="outlined"
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                bgcolor: "white",
+                              },
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <TextField
+                            fullWidth
+                            label="عنوان شغلی (سمت)"
+                            value={newWorkExp.jobTitle}
+                            onChange={(e) =>
+                              setNewWorkExp({
+                                ...newWorkExp,
+                                jobTitle: e.target.value,
+                              })
+                            }
+                            variant="outlined"
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                bgcolor: "white",
+                              },
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <TextField
+                            fullWidth
+                            label="سال شروع"
+                            type="number"
+                            value={newWorkExp.startYear}
+                            onChange={(e) =>
+                              setNewWorkExp({
+                                ...newWorkExp,
+                                startYear: e.target.value,
+                              })
+                            }
+                            variant="outlined"
+                            inputProps={{
+                              min: 1950,
+                              max: new Date().getFullYear(),
+                            }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                bgcolor: "white",
+                              },
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <TextField
+                            fullWidth
+                            label="سال پایان"
+                            type="number"
+                            value={newWorkExp.endYear}
+                            onChange={(e) =>
+                              setNewWorkExp({
+                                ...newWorkExp,
+                                endYear: e.target.value,
+                              })
+                            }
+                            disabled={newWorkExp.isCurrent}
+                            variant="outlined"
+                            inputProps={{
+                              min: 1950,
+                              max: new Date().getFullYear() + 1,
+                            }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                bgcolor: "white",
+                              },
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              height: "100%",
+                            }}
+                          >
+                            <Button
+                              variant={
+                                newWorkExp.isCurrent ? "contained" : "outlined"
+                              }
+                              onClick={() =>
+                                setNewWorkExp({
+                                  ...newWorkExp,
+                                  isCurrent: !newWorkExp.isCurrent,
+                                  endYear: !newWorkExp.isCurrent
+                                    ? ""
+                                    : newWorkExp.endYear,
+                                })
+                              }
+                              sx={{ width: "100%" }}
+                            >
+                              {newWorkExp.isCurrent ? "تا الان" : "در حال کار"}
+                            </Button>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                        {editingWorkExpIndex !== null ? (
+                          <>
+                            <Button
+                              variant="contained"
+                              onClick={handleUpdateWorkExp}
+                              startIcon={<SaveIcon />}
+                            >
+                              به‌روزرسانی
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              onClick={handleCancelWorkExp}
+                              startIcon={<CancelIcon />}
+                            >
+                              انصراف
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            onClick={handleAddWorkExp}
+                            startIcon={<AddIcon />}
+                          >
+                            افزودن سابقه شغلی
+                          </Button>
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box>
+                    {user?.workExperience && user.workExperience.length > 0 ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                        }}
+                      >
+                        {user.workExperience.map((exp, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              p: 2,
+                              bgcolor: "rgba(255, 255, 255, 0.1)",
+                              borderRadius: 1,
+                              border: "1px solid rgba(255, 255, 255, 0.2)",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                mb: 1,
+                              }}
+                            >
+                              <BusinessCenterIcon
+                                sx={{ mr: 1, color: "primary.main" }}
+                              />
+                              <Typography variant="h6">
+                                {exp.jobTitle}
+                              </Typography>
+                            </Box>
+                            <Typography
+                              variant="body1"
+                              color="text.secondary"
+                              sx={{ mb: 1 }}
+                            >
+                              {exp.companyName}
+                            </Typography>
+                            <Typography variant="body2">
+                              {exp.startYear} -{" "}
+                              {exp.isCurrent || !exp.endYear
+                                ? "تا الان"
+                                : exp.endYear}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        سابقه شغلی ثبت نشده است.
                       </Typography>
                     )}
                   </Box>
